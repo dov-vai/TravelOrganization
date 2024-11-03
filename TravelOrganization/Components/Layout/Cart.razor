@@ -1,0 +1,40 @@
+@page "/cart"
+
+<h3>Shopping Cart</h3>
+
+
+    <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+        <thead>
+            <tr>
+                <th style="text-align: left; padding: 8px;">Item</th>
+                <th style="text-align: center; padding: 8px;">Quantity</th>
+                <th style="text-align: right; padding: 8px;">Price</th>
+                <th style="text-align: right; padding: 8px;">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+
+                <tr>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">Kelionė</td>
+                    <td style="padding: 8px; text-align: center; border-bottom: 1px solid #ddd;">
+                        <input type="number" min="1" value="1" style="width: 50px; text-align: center;" />
+                    </td>
+                    <td style="padding: 8px; text-align: right; border-bottom: 1px solid #ddd;">10$</td>
+                    <td style="padding: 8px; text-align: right; border-bottom: 1px solid #ddd;">10$</td>
+                </tr>
+            
+        </tbody>
+    </table>
+
+    <div style="text-align: right; margin-top: 1rem;">
+        <strong>Total:</strong>
+    </div>
+
+    <div style="text-align: right; margin-top: 1rem;">
+        <button  style="padding: 0.5rem 1rem; background-color: #007bff; color: white; border: none; cursor: pointer;">Proceed to Checkout</button>
+    </div>
+
+
+@code {
+
+}
