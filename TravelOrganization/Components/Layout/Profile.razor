@@ -1,5 +1,25 @@
 @page "/profile"
 
-<h3>Your Profile</h3>
+<h3>Profile Page</h3>
 
-<p>Welcome to your profile page!</p>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; margin-top: 2rem;">
+    <div style="padding-left: 2rem;">
+        <label>Email</label><br/>
+        <input type="email" placeholder="vardas@gmail.com" style="width: 100%;" /><br/><br/>
+        
+        <label>Username</label><br/>
+        <input type="text" placeholder="Vardenis" style="width: 100%;" />
+    </div>
+
+    <div style="text-align: center;">
+        <img src="" alt="Profile Picture" style="width: 150px; height: 150px; border-radius: 50%;" />
+        
+        <div style="margin-top: 10px;">
+            <a href="/profilePicture">Edit</a>
+        </div>
+    </div>
+</div>
+
+@code {
+ 
+}

@@ -1,0 +1,18 @@
+@page "/profilePicture"
+
+<h3>Upload Profile Picture</h3>
+
+<form enctype="multipart/form-data" @onsubmit="OnSubmit">
+    <div>
+        <label for="profilePicture">Choose a profile picture:</label>
+        <input type="file" id="profilePicture" />
+    </div>
+    <button type="submit">Upload</button>
+</form>
+
+@code {
+    private async Task OnSubmit()
+    {
+
+    }
+}

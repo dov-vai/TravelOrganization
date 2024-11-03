@@ -2,19 +2,21 @@
 
 <h3>Register</h3>
 
-<div>
-    <label>Username:</label>
-    <input type="text" />
-</div>
-<div>
-    <label>Email:</label>
-    <input type="email" />
-</div>
-<div>
-    <label>Password:</label>
-    <input type="password" />
-</div>
-<button @onclick="OnSubmit">Submit</button>
+<form @onsubmit="OnSubmit">
+    <div>
+        <label>Username:</label>
+        <input type="text" required />
+    </div>
+    <div>
+        <label>Email:</label>
+        <input type="email" required />
+    </div>
+    <div>
+        <label>Password:</label>
+        <input type="password" required minlength="6" />
+    </div>
+    <button type="submit">Submit</button>
+</form>
 
 @code {
     private void OnSubmit()
