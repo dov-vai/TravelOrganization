@@ -1,0 +1,105 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\silva\\Documents\\dev\\TravelOrganization\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{47ABE34E-ED22-49E0-9BD1-A93333B49D5D}|TravelOrganization\\TravelOrganization.csproj|c:\\users\\silva\\documents\\dev\\travelorganization\\travelorganization\\components\\pages\\component.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{47ABE34E-ED22-49E0-9BD1-A93333B49D5D}|TravelOrganization\\TravelOrganization.csproj|solutionrelative:travelorganization\\components\\pages\\component.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{47ABE34E-ED22-49E0-9BD1-A93333B49D5D}|TravelOrganization\\TravelOrganization.csproj|c:\\users\\silva\\documents\\dev\\travelorganization\\travelorganization\\components\\pages\\accounting.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{47ABE34E-ED22-49E0-9BD1-A93333B49D5D}|TravelOrganization\\TravelOrganization.csproj|solutionrelative:travelorganization\\components\\pages\\accounting.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{47ABE34E-ED22-49E0-9BD1-A93333B49D5D}|TravelOrganization\\TravelOrganization.csproj|c:\\users\\silva\\documents\\dev\\travelorganization\\travelorganization\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{47ABE34E-ED22-49E0-9BD1-A93333B49D5D}|TravelOrganization\\TravelOrganization.csproj|solutionrelative:travelorganization\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{47ABE34E-ED22-49E0-9BD1-A93333B49D5D}|TravelOrganization\\TravelOrganization.csproj|c:\\users\\silva\\documents\\dev\\travelorganization\\travelorganization\\components\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{47ABE34E-ED22-49E0-9BD1-A93333B49D5D}|TravelOrganization\\TravelOrganization.csproj|solutionrelative:travelorganization\\components\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{47ABE34E-ED22-49E0-9BD1-A93333B49D5D}|TravelOrganization\\TravelOrganization.csproj|c:\\users\\silva\\documents\\dev\\travelorganization\\travelorganization\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{47ABE34E-ED22-49E0-9BD1-A93333B49D5D}|TravelOrganization\\TravelOrganization.csproj|solutionrelative:travelorganization\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 244,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Component.razor",
+              "DocumentMoniker": "C:\\Users\\silva\\Documents\\dev\\TravelOrganization\\TravelOrganization\\Components\\Pages\\Component.razor",
+              "RelativeDocumentMoniker": "TravelOrganization\\Components\\Pages\\Component.razor",
+              "ToolTip": "C:\\Users\\silva\\Documents\\dev\\TravelOrganization\\TravelOrganization\\Components\\Pages\\Component.razor",
+              "RelativeToolTip": "TravelOrganization\\Components\\Pages\\Component.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-11-03T16:56:49.038Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Accounting.razor",
+              "DocumentMoniker": "C:\\Users\\silva\\Documents\\dev\\TravelOrganization\\TravelOrganization\\Components\\Pages\\Accounting.razor",
+              "RelativeDocumentMoniker": "TravelOrganization\\Components\\Pages\\Accounting.razor",
+              "ToolTip": "C:\\Users\\silva\\Documents\\dev\\TravelOrganization\\TravelOrganization\\Components\\Pages\\Accounting.razor",
+              "RelativeToolTip": "TravelOrganization\\Components\\Pages\\Accounting.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-11-03T16:56:14.316Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "NavMenu.razor",
+              "DocumentMoniker": "C:\\Users\\silva\\Documents\\dev\\TravelOrganization\\TravelOrganization\\Components\\Layout\\NavMenu.razor",
+              "RelativeDocumentMoniker": "TravelOrganization\\Components\\Layout\\NavMenu.razor",
+              "ToolTip": "C:\\Users\\silva\\Documents\\dev\\TravelOrganization\\TravelOrganization\\Components\\Layout\\NavMenu.razor",
+              "RelativeToolTip": "TravelOrganization\\Components\\Layout\\NavMenu.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACMAAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-11-03T16:40:08.941Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MainLayout.razor",
+              "DocumentMoniker": "C:\\Users\\silva\\Documents\\dev\\TravelOrganization\\TravelOrganization\\Components\\Layout\\MainLayout.razor",
+              "RelativeDocumentMoniker": "TravelOrganization\\Components\\Layout\\MainLayout.razor",
+              "ToolTip": "C:\\Users\\silva\\Documents\\dev\\TravelOrganization\\TravelOrganization\\Components\\Layout\\MainLayout.razor",
+              "RelativeToolTip": "TravelOrganization\\Components\\Layout\\MainLayout.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-11-03T16:39:58.795Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\silva\\Documents\\dev\\TravelOrganization\\TravelOrganization\\Program.cs",
+              "RelativeDocumentMoniker": "TravelOrganization\\Program.cs",
+              "ToolTip": "C:\\Users\\silva\\Documents\\dev\\TravelOrganization\\TravelOrganization\\Program.cs",
+              "RelativeToolTip": "TravelOrganization\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-03T16:15:28.393Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
