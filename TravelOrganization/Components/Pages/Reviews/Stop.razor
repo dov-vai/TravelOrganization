@@ -1,0 +1,65 @@
+@page "/Stop"
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+
+<h3 class="text-center mt-4 mb-4">Stotelės informacija</h3>
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Stotelės pavadinimas</h4>
+            <p class="card-text"><strong>Adresas:</strong> (...)</p>
+            <p class="card-text">Trumpas stotelės aprašas</p>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+        <h5 class="mb-0">Atsiliepimai</h5>
+        <button type="button" class="btn btn-primary" @onclick="AddReview">Palikti atsiliepimą</button>
+    </div>
+
+
+    <!-- Review Item - Repeat for each review -->
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h6 class="card-subtitle mb-2 text-muted">Naudotojas123</h6>
+                    <small class="text-muted">Paskelbta: 2024-01-01</small>
+                </div>
+                <div>
+                    <span class="badge bg-warning text-dark">★ ★ ★ ★ ☆</span>
+                </div>
+            </div>
+            <p class="card-text mt-2">
+                Keliautojo įžvalgos, komentarai.
+            </p>
+            <button class="btn btn-sm btn-outline-primary">Išversti</button>
+        </div>
+    </div>
+    
+    <nav>
+        <ul class="pagination justify-content-center mt-4">
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Atgal</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Sekantis</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+@code {
+    // TODO: these pages will be generated, this is just a template for one
+
+    private void AddReview()
+    {
+        NavigationManager.NavigateTo("/ReviewForm");
+    }
+}
