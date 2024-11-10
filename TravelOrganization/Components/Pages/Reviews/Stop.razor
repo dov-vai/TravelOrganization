@@ -1,4 +1,5 @@
 @page "/Stop"
+@using ApexCharts
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 
@@ -13,41 +14,61 @@
         </div>
     </div>
 
-    <hr />
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 pt-5 d-flex justify-content-center">
+                <ApexChart TItem="ReviewRatingData" Width="300" Height="200">
+                    <ApexPointSeries TItem="ReviewRatingData"
+                                     Name="Rating"
+                                     Items="RatingData"
+                                     XValue="@(item => item.Star)"
+                                     YValue="@(item => item.Count)"
+                                     SeriesType="SeriesType.Donut"/>
+                </ApexChart>
+            </div>
 
-    <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
-        <h5 class="mb-0">Atsiliepimai</h5>
-        <button type="button" class="btn btn-primary" @onclick="AddReview">Palikti atsiliepimą</button>
-    </div>
-
-
-    <!-- Review Item - Repeat for each review -->
-    <div class="card mb-3">
-        <div class="card-body">
-            <div class="d-flex justify-content-between">
-                <div>
-                    <h6 class="card-subtitle mb-2 text-muted">Naudotojas123</h6>
-                    <small class="text-muted">Paskelbta: 2024-01-01</small>
+            <div class="col-md-8">
+                <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+                    <h5 class="mb-0">Atsiliepimai</h5>
+                    <button type="button" class="btn btn-primary" @onclick="AddReview">Palikti atsiliepimą</button>
                 </div>
-                <div>
-                    <span class="badge bg-warning text-dark">★ ★ ★ ★ ☆</span>
+
+                <!-- Review Item - Repeat for each review -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="card-subtitle mb-2 text-muted">Naudotojas123</h6>
+                                <small class="text-muted">Paskelbta: 2024-01-01</small>
+                            </div>
+                            <div>
+                                <span class="badge bg-warning text-dark">★ ★ ★ ★ ☆</span>
+                            </div>
+                        </div>
+                        <p class="card-text mt-2">
+                            Keliautojo įžvalgos, komentarai.
+                        </p>
+                        <button class="btn btn-sm btn-outline-primary">Išversti</button>
+                    </div>
                 </div>
             </div>
-            <p class="card-text mt-2">
-                Keliautojo įžvalgos, komentarai.
-            </p>
-            <button class="btn btn-sm btn-outline-primary">Išversti</button>
         </div>
     </div>
-    
+
     <nav>
         <ul class="pagination justify-content-center mt-4">
             <li class="page-item disabled">
                 <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Atgal</a>
             </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">1</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#">2</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#">3</a>
+            </li>
             <li class="page-item">
                 <a class="page-link" href="#">Sekantis</a>
             </li>
@@ -56,10 +77,27 @@
 </div>
 
 @code {
+
     // TODO: these pages will be generated, this is just a template for one
+
+    public class ReviewRatingData
+    {
+        public string Star { get; set; }
+        public int Count { get; set; }
+    }
+
+    readonly List<ReviewRatingData> RatingData =
+    [
+        new() { Star = "1 žvaigždė", Count = 5 },
+        new() { Star = "2 žvaigždės", Count = 12 },
+        new() { Star = "3 žvaigždės", Count = 30 },
+        new() { Star = "4 žvaigždės", Count = 50 },
+        new() { Star = "5 žvaigždės", Count = 85 }
+    ];
 
     private void AddReview()
     {
         NavigationManager.NavigateTo("/ReviewForm");
     }
+
 }
