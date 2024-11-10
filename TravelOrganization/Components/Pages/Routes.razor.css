@@ -1,0 +1,12 @@
+.route-list {
+    margin-top: 20px;
+}
+
+.route-right {
+    float: right;
+}
+
+.route-left {
+    display: inline-block;
+    font-size: x-large;
+};

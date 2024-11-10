@@ -1,0 +1,16 @@
+@page "/routes/{id}/delete"
+
+<div class="text-center justify-content-center align-items-center">
+    <div class="h-1">
+        <h1>Ar tikrai norite ištrinti maršrutą Nr. @Id?</h1>
+        <div class="btn-group">
+            <a href="/routes" class="btn btn-danger btn-lg me-3">Ištrinti</a>
+            <a href="/routes" class="btn btn-primary btn-lg">Atšaukti</a>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string? Id { get; set; }
+}

@@ -1,0 +1,11 @@
+@page "/routes/{id}/edit"
+@rendermode InteractiveServer
+
+<h1>Maršruto redagavimas</h1>
+
+<RouteForm Type="Edit" Name="Kaunas-Vilnius"/>
+
+@code {
+    [Parameter]
+    public string? Id { get; set; }
+}

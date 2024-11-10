@@ -1,0 +1,28 @@
+@page "/routemap"
+@rendermode InteractiveServer
+@inject IJSRuntime JS
+
+<link rel="stylesheet" href="leaflet/leaflet.css">
+<script src="leaflet/leaflet.js"</script>
+
+<style>
+#map {
+    height: 900px;
+}
+</style>
+
+<h1>Maršrutų žemėlapis</h1>
+
+<div id="map"></div>
+
+@code {
+    private IJSObjectReference? module;
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender) {
+            module = await JS.InvokeAsync<IJSObjectReference>("import", "./js/routemap.js");
+            await module.InvokeVoidAsync("onLoad");
+        }
+    }
+}
