@@ -1,0 +1,31 @@
+@page "/ReviewDelete"
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+
+<div class="d-flex flex-column justify-content-center align-items-center">
+    <div class="card" style="width: 18rem; margin: 20px;">
+        <div class="card-body">
+            <h5 class="card-title">Šalinimo patvirtinimas</h5>
+            <p class="card-text">
+                Ar tikrai norite ištrinti šį atsiliepimą?
+            </p>
+            <div class="d-flex justify-content-end">
+                <button @onclick="Confirm" class="btn btn-danger me-2">Patvirtinti</button>
+                <button @onclick="Cancel" class="btn btn-secondary">Atšaukti</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    private void Confirm()
+    {
+        NavigationManager.NavigateTo("/Stop");
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/Stop");
+    }
+}
