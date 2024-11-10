@@ -1,0 +1,18 @@
+﻿@page "/cdverification"
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+<h3>Kortelės naikinimo tvirtinimas</h3>
+
+ar trinti kortelę?
+<button @onclick="Yes">Taip</button>
+<button @onclick="No">Ne</button>
+@code {
+    private void Yes()
+    {
+        NavigationManager.NavigateTo("/profile");
+    }
+    private void No()
+    {
+        NavigationManager.NavigateTo("/profile");
+    }
+}

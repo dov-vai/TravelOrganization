@@ -1,0 +1,13 @@
+﻿@page "/cview"
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+<h3>Dabartinės kortelės peržiūra</h3>
+
+<button @onclick="Verify">trinti kortelę</button>
+
+@code {
+    private void Verify()
+    {
+        NavigationManager.NavigateTo("/cdverification");
+    }
+}

@@ -18,8 +18,23 @@
             <a href="/profilePicture">Edit</a>
         </div>
     </div>
+
+    @* prideta Kristupo *@
+    <button @onclick="CCard">Priskirti kortelæ</button>
+    <button @onclick="WCard">Perþiûrëti kortelæ</button>
 </div>
 
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
 @code {
- 
+    @* prideta Kristupo *@
+    private void CCard()
+    {
+        Navigation.NavigateTo("/ccreation");
+    }
+    private void WCard()
+    {
+        Navigation.NavigateTo("/cview");
+    }
 }

@@ -30,11 +30,18 @@
         <strong>Total:</strong>
     </div>
 
-    <div style="text-align: right; margin-top: 1rem;">
-        <button  style="padding: 0.5rem 1rem; background-color: #007bff; color: white; border: none; cursor: pointer;">Proceed to Checkout</button>
-    </div>
 
+    @* pakeista Kristupo *@
+    <div style="text-align: right; margin-top: 1rem;">
+        <button @onclick="CreateOrder" style="padding: 0.5rem 1rem; background-color: #007bff; color: white; border: none; cursor: pointer;">Kurti užsakymą</button>
+    </div>
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
 
 @code {
-
+    // prideta Kristupo
+    private void CreateOrder()
+    {
+        Navigation.NavigateTo("/ocreation");
+    }
 }

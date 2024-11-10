@@ -1,0 +1,39 @@
+﻿@page "/ccreation"
+@inject NavigationManager NavigationManager
+@using System.ComponentModel.DataAnnotations
+@rendermode InteractiveServer
+<PageTitle>Kortelės kūrimas</PageTitle>
+
+
+<h3>Įveskite kortelės duomenis:</h3>
+
+<table>
+    <tbody>
+        <tr>
+            <td><label for="cardNumber">Numeris:</label></td>
+            <td><input id="cardNumber" type="text" placeholder="Enter card number" /></td>
+        </tr>
+        <tr>
+            <td><label for="ccv">CCV:</label></td>
+            <td><input id="ccv" type="text" placeholder="Enter CCV" /></td>
+        </tr>
+        <tr>
+            <td><label for="expiryDate">Galiojimo data:</label></td>
+            <td><input id="expiryDate" type="text" placeholder="MM/YY" /></td>
+        </tr>
+        <tr>
+            <td><label for="ownerName">Savininko vardas:</label></td>
+            <td><input id="ownerName" type="text" placeholder="Enter owner's name" /></td>
+        </tr>
+    </tbody>
+</table>
+
+<button @onclick="ToProfile">prideti</button>
+
+
+@code {
+    private void ToProfile()
+    {
+        NavigationManager.NavigateTo("/profile");
+    }
+}

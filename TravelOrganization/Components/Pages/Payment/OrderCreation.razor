@@ -1,0 +1,25 @@
+﻿@page "/ocreation"
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+<PageTitle>Užsakymo kūrimas</PageTitle>
+
+<h3>Užsakymo kūrimas</h3>
+
+<button @onclick="Pay">Apmokėti per bankininkystę</button>
+<button @onclick="AddCard">(temp)pridėti kortelę</button>
+<button @onclick="Abort">Atšaukti užsakymą</button>
+
+@code {
+    private void Pay()
+    {
+        NavigationManager.NavigateTo("/payment");
+    }
+    private void AddCard()
+    {
+        NavigationManager.NavigateTo("/ccreation");
+    }
+    private void Abort()
+    {
+        NavigationManager.NavigateTo("/abort");
+    }
+}
