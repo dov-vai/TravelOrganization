@@ -1,4 +1,4 @@
-@page "/profile"
+﻿@page "/profile"
 
 <h3>Profile Page</h3>
 
@@ -20,8 +20,10 @@
     </div>
 
     @* prideta Kristupo *@
-    <button @onclick="CCard">Priskirti kortel�</button>
-    <button @onclick="WCard">Per�i�r�ti kortel�</button>
+    <button @onclick="CCard">Priskirti kortelę</button>
+    <button @onclick="WCard">Peržiūrėti kortelę</button>
+    <button @onclick="WHistory">Peržiūrėti kelionių istoriją</button>
+
 </div>
 
 @inject NavigationManager Navigation
@@ -36,5 +38,9 @@
     private void WCard()
     {
         Navigation.NavigateTo("/cview");
+    }
+    private void WHistory()
+    {
+        Navigation.NavigateTo("/trip/history");
     }
 }

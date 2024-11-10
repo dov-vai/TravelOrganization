@@ -1,0 +1,87 @@
+﻿@page "/trip/history"
+@rendermode InteractiveServer
+@inject NavigationManager Navigation
+
+<h3>Kelionių istorija</h3>
+
+<div style="max-width: 800px; margin: 0 auto; padding: 1rem; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+    <h4>Jūsų kelionės</h4>
+
+    <!-- Trip History Table -->
+    <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+        <thead style="background-color: #f8f9fa;">
+            <tr>
+                <th style="padding: 0.5rem; text-align: left;">Išvykimo vieta</th>
+                <th style="padding: 0.5rem; text-align: left;">Atvykimo vieta</th>
+                <th style="padding: 0.5rem; text-align: left;">Atstumas</th>
+                <th style="padding: 0.5rem; text-align: left;">Kaina</th>
+                <th style="padding: 0.5rem; text-align: left;">Data nuo</th>
+                <th style="padding: 0.5rem; text-align: left;">Data iki</th>
+                <th style="padding: 0.5rem; text-align: center;">Veiksmai</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var trip in TripHistoryList)
+            {
+                <tr>
+                    <td style="padding: 0.5rem;">@trip.Source</td>
+                    <td style="padding: 0.5rem;">@trip.Destination</td>
+                    <td style="padding: 0.5rem;">@trip.Distance km</td>
+                    <td style="padding: 0.5rem;">@trip.Price €</td>
+                    <td style="padding: 0.5rem;">@trip.DateFrom.ToShortDateString()</td>
+                    <td style="padding: 0.5rem;">@trip.DateTo.ToShortDateString()</td>
+                    <td style="padding: 0.5rem; text-align: center;">
+                        <button class="btn btn-info" @onclick="() => ViewTripDetails(trip.Id)">Peržiūrėti</button>
+                        @if (!trip.IsCompleted)
+                        {
+                            <button class="btn btn-danger" @onclick="() => CancelTrip(trip.Id)">Atšaukti</button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Add New Trip Button -->
+    <div style="margin-top: 1rem; text-align: center;">
+        <button class="btn btn-primary" @onclick="NavigateToAddTripPage">Pridėti naują kelionę</button>
+    </div>
+</div>
+
+@code {
+    // List of trips with "IsCompleted" flag added
+    private List<Trip> TripHistoryList = new List<Trip>
+    {
+        new Trip { Id = 1, Source = "Vilnius", Destination = "Kaunas", Distance = 100, Price = 50, DateFrom = new DateTime(2024, 01, 01), DateTo = new DateTime(2024, 01, 07), IsCompleted = true },
+        new Trip { Id = 2, Source = "Kaunas", Destination = "Palanga", Distance = 200, Price = 100, DateFrom = new DateTime(2024, 02, 01), DateTo = new DateTime(2024, 02, 05), IsCompleted = false },
+        new Trip { Id = 3, Source = "Vilnius", Destination = "Klaipėda", Distance = 250, Price = 120, DateFrom = new DateTime(2024, 03, 10), DateTo = new DateTime(2024, 03, 15), IsCompleted = false }
+    };
+
+    private void NavigateToAddTripPage()
+    {
+        Navigation.NavigateTo("/trip/add");
+    }
+
+    private void ViewTripDetails(int tripId)
+    {
+        Navigation.NavigateTo($"/trip/view/");
+    }
+
+    private void CancelTrip(int tripId)
+    {
+        Navigation.NavigateTo($"/trip/cancel/");
+    }
+
+    // Trip model with an additional IsCompleted property
+    public class Trip
+    {
+        public int Id { get; set; }
+        public string Source { get; set; }
+        public string Destination { get; set; }
+        public double Distance { get; set; }
+        public double Price { get; set; }
+        public DateTime DateFrom { get; set; }
+        public DateTime DateTo { get; set; }
+        public bool IsCompleted { get; set; } // Tracks if the trip is completed or not
+    }
+}
