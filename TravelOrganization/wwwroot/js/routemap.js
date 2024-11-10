@@ -13,4 +13,11 @@ export function onLoad() {
     L.tileLayer(TILE_URL, {
         attribution: ATTRIBUTION
     }).addTo(map);
+    
+    // temporary marker for navigation showcase
+    const marker = L.marker([LAT, LON]).addTo(map);
+    
+    marker.on('click', () => {
+        window.location.href = '/Stop';
+    });
 }
