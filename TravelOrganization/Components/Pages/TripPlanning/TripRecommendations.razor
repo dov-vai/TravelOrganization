@@ -1,0 +1,152 @@
+﻿@page "/trip/"
+@rendermode InteractiveServer
+@inject NavigationManager Navigation
+
+<h3>Rekomendacijos</h3>
+
+<div style="display: flex; gap: 2rem; align-items: flex-start;">
+
+    <!-- Left Column: Form -->
+    <form @onsubmit="OnSubmit" style="display: flex; flex-direction: column; gap: 1rem; max-width: 400px;">
+        <div>
+            <label>Išvykimo vieta:</label>
+            <input type="text" @bind="Source" style="width: 100%; padding: 0.5rem;" />
+        </div>
+
+        <div>
+            <label>Atvykimo vieta:</label>
+            <input type="text" @bind="Destination" style="width: 100%; padding: 0.5rem;" />
+        </div>
+
+        <div>
+            <label>Atstumo limitas (km):</label>
+            <input type="number" @bind="DistanceLimit" style="width: 100%; padding: 0.5rem;" />
+        </div>
+
+        <div>
+            <label>Kainos limitas (€):</label>
+            <input type="number" @bind="PriceLimit" style="width: 100%; padding: 0.5rem;" />
+        </div>
+
+        <div>
+            <label>Data nuo:</label>
+            <input type="date" @bind="DateFrom" style="width: 100%; padding: 0.5rem;" />
+        </div>
+
+        <div>
+            <label>Data iki:</label>
+            <input type="date" @bind="DateTo" style="width: 100%; padding: 0.5rem;" />
+        </div>
+
+        <div>
+            <label>Trukmės apribojimas (dienos):</label>
+            <input type="number" @bind="DurationLimit" style="width: 100%; padding: 0.5rem;" />
+        </div>
+
+        <!-- Buttons Section -->
+        <div style="display: flex; gap: 1rem;">
+            <button type="button" @onclick="Refresh" style="padding: 0.75rem; font-size: 1rem; background-color: #6c757d; color: white; border: none; cursor: pointer;">
+                Atnaujinti
+            </button>
+        </div>
+    </form>
+
+    <!-- Right Column: Trip Information Card -->
+    <div style="border: 1px solid #ddd; padding: 1rem; width: 300px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+        <h4>Kelionės informacija</h4>
+        @if (selectedTrip != null)
+        {
+            <p><strong>Išvykimo vieta:</strong> @selectedTrip.Source</p>
+            <p><strong>Atvykimo vieta:</strong> @selectedTrip.Destination</p>
+            <p><strong>Atstumas:</strong> @selectedTrip.Distance km</p>
+            <p><strong>Kaina:</strong> @selectedTrip.Price €</p>
+            <p><strong>Data nuo:</strong> @selectedTrip.DateFrom.ToShortDateString()</p>
+            <p><strong>Data iki:</strong> @selectedTrip.DateTo.ToShortDateString()</p>
+            <p><strong>Kelionės trukmė:</strong> @selectedTrip.Duration days</p>
+            <button type="button" @onclick="PreviewMap" style="padding: 0.5rem 1rem; font-size: 1rem; background-color: #28a745; color: white; border: none; cursor: pointer;">
+                Peržiūrėti žemėlapį
+            </button>
+        }
+        else
+        {
+            <p>Pasirinkite kelionę.</p>
+        }
+    </div>
+</div>
+
+<!-- Middle Section: Available Trip Options -->
+<div style="margin-top: 3rem;">
+    <h4>Pasirinkite kelionę</h4>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: space-between;">
+        @foreach (var trip in trips)
+        {
+            <div style="border: 1px solid #ddd; padding: 1rem; width: 280px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                <h5>@trip.Source - @trip.Destination</h5>
+                <p><strong>Atstumas:</strong> @trip.Distance km</p>
+                <p><strong>Kaina:</strong> @trip.Price €</p>
+                <p><strong>Data nuo:</strong> @trip.DateFrom.ToShortDateString()</p>
+                <p><strong>Data iki:</strong> @trip.DateTo.ToShortDateString()</p>
+                <button type="button" @onclick="() => SelectTrip(trip)" style="padding: 0.5rem 1rem; background-color: #007bff; color: white; border: none; cursor: pointer;">
+                    Pasirinkti
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private string Source { get; set; } = "Vilnius";
+    private string Destination { get; set; } = "Kaunas";
+    private double DistanceLimit { get; set; } = 100;
+    private double PriceLimit { get; set; } = 50;
+    private DateTime DateFrom { get; set; } = DateTime.Now;
+    private DateTime DateTo { get; set; } = DateTime.Now.AddDays(7);
+    private double DurationLimit { get; set; } = 5;
+
+    private List<Trip> trips = new List<Trip>
+    {
+        new Trip { Id = 1, Source = "Vilnius", Destination = "Kaunas", Distance = 100, Price = 50, DateFrom = DateTime.Now, DateTo = DateTime.Now.AddDays(7) },
+        new Trip { Id = 2, Source = "Vilnius", Destination = "Palanga", Distance = 300, Price = 120, DateFrom = DateTime.Now, DateTo = DateTime.Now.AddDays(7) },
+        new Trip { Id = 3, Source = "Kaunas", Destination = "Zarasai", Distance = 200, Price = 80, DateFrom = DateTime.Now, DateTo = DateTime.Now.AddDays(10) }
+    };
+
+    private Trip selectedTrip;
+
+    private void SelectTrip(Trip trip)
+    {
+        selectedTrip = trip;
+    }
+
+    private void OnSubmit()
+    {
+        Navigation.NavigateTo("/");
+    }
+
+    private void Refresh()
+    {
+        Source = "Vilnius";
+        Destination = "Kaunas";
+        DistanceLimit = 100;
+        PriceLimit = 50;
+        DateFrom = DateTime.Now;
+        DateTo = DateTime.Now.AddDays(7);
+        DurationLimit = 5;
+    }
+
+    private void PreviewMap()
+    {
+        Navigation.NavigateTo("/trip/view");
+    }
+
+    public class Trip
+    {
+        public int Id { get; set; }
+        public string Source { get; set; }
+        public string Destination { get; set; }
+        public double Distance { get; set; }
+        public double Price { get; set; }
+        public DateTime DateFrom { get; set; }
+        public DateTime DateTo { get; set; }
+        public double Duration => (DateTo - DateFrom).TotalDays;
+    }
+}

@@ -1,0 +1,55 @@
+﻿@page "/trip/view"
+@rendermode InteractiveServer
+@inject IJSRuntime JS
+@inject NavigationManager Navigation
+
+<link rel="stylesheet" href="leaflet/leaflet.css">
+<script src="leaflet/leaflet.js"></script>
+
+<style>
+    #map {
+        height: 600px;
+        width: 100%;
+        border-radius: 8px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<h1>Kelionės peržiūra</h1>
+
+<div style="display: flex; flex-direction: column; gap: 1rem; max-width: 600px; margin: 0 auto;">
+    <!-- Trip Details Section -->
+    <div style="border: 1px solid #ddd; padding: 1rem; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+        <h4>Kelionės informacija</h4>
+        <p><strong>Išvykimo vieta:</strong> Vilnius</p>
+        <p><strong>Atvykimo vieta:</strong> Kaunas</p>
+        <p><strong>Atstumas:</strong> 100 km</p>
+        <p><strong>Numatoma kaina:</strong> 50 €</p>
+        <p><strong>Kelionės datos:</strong> 2024-01-01 iki 2024-01-07</p>
+    </div>
+
+    <!-- Map Section -->
+    <div id="map"></div>
+
+    <!-- Add Trip to Order Button -->
+    <button class="btn btn-success mt-3" @onclick="NavigateToAddTripPage">Pridėti kelionę į užsakymą</button>
+</div>
+
+@code {
+    private IJSObjectReference? module;
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            module = await JS.InvokeAsync<IJSObjectReference>("import", "./js/tripview.js");
+            await module.InvokeVoidAsync("onLoad");
+        }
+    }
+
+    private void NavigateToAddTripPage()
+    {
+        // Redirect the user to the /trip/add page
+        Navigation.NavigateTo("/trip/add");
+    }
+}
