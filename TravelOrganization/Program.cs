@@ -1,5 +1,7 @@
 using ApexCharts;
 using TravelOrganization.Components;
+using TravelOrganization.Data;
+using TravelOrganization.Data.Repositories.Reviews;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +11,15 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddApexCharts();
 
+builder.Services.AddSingleton<DataContext>();
+
 var app = builder.Build();
+
+{
+    using var scope = app.Services.CreateScope();
+    var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+    await context.Init();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

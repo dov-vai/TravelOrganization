@@ -8,6 +8,18 @@
 
     <ItemGroup>
       <PackageReference Include="Blazor-ApexCharts" Version="4.0.0" />
+      <PackageReference Include="Dapper" Version="2.1.35" />
+      <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Assets\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Assets\script.ddl">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>
