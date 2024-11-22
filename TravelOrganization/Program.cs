@@ -12,6 +12,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddApexCharts();
 
 builder.Services.AddSingleton<DataContext>();
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 
 var app = builder.Build();
 
