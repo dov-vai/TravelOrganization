@@ -2,6 +2,7 @@ using ApexCharts;
 using TravelOrganization.Components;
 using TravelOrganization.Data;
 using TravelOrganization.Data.Repositories.Reviews;
+using TravelOrganization.Data.Repositories.Routes;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,7 @@ builder.Services.AddApexCharts();
 
 builder.Services.AddSingleton<DataContext>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+builder.Services.AddScoped<StopRepository>();
 
 var app = builder.Build();
 

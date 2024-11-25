@@ -1,3 +1,6 @@
+@using TravelOrganization.Data.Repositories.Routes;
+@inject StopRepository StopRepository;
+
 <style>
 .station-list {
     border: 1px solid grey;
@@ -57,10 +60,11 @@ document.addEventListener("dragover", (event) => {
     event.preventDefault();
 });
 
-document.addEventListener("drop", ({target}) => {
-    if (selectedStation) {
-        selectedStation.classList.remove('active');
-        selectedStation = null;
+    using TravelOrganization.Components.Pages.Reviews;
+
+#line default
+#line hidden
+#nullable disable
 
         onUnselectStation();
     }
