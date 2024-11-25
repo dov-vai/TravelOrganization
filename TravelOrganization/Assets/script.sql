@@ -14,22 +14,22 @@ DROP TABLE IF EXISTS roles;
 DROP TABLE IF EXISTS korteles_tipai;
 CREATE TABLE korteles_tipai
 (
-	id,
-	name NOT NULL,
+	id int,
+	name text NOT NULL,
 	PRIMARY KEY(id)
 );
-INSERT INTO korteles_tipai(id, name) VALUES('1', 'Mastercard');
-INSERT INTO korteles_tipai(id, name) VALUES('2', 'Visa');
+INSERT INTO korteles_tipai(id, name) VALUES(1, 'Mastercard');
+INSERT INTO korteles_tipai(id, name) VALUES(2, 'Visa');
 
 CREATE TABLE roles
 (
-	id,
-	name NOT NULL,
+	id int,
+	name text NOT NULL,
 	PRIMARY KEY(id)
 );
-INSERT INTO roles(id, name) VALUES('1', 'Klientas');
-INSERT INTO roles(id, name) VALUES('2', 'Kelionu organizatorius');
-INSERT INTO roles(id, name) VALUES('3', 'Administratorius');
+INSERT INTO roles(id, name) VALUES(1, 'Klientas');
+INSERT INTO roles(id, name) VALUES(2, 'Kelionu organizatorius');
+INSERT INTO roles(id, name) VALUES(3, 'Administratorius');
 
 CREATE TABLE marsrutai
 (
@@ -41,15 +41,15 @@ CREATE TABLE marsrutai
 
 CREATE TABLE uzsakymo_busenos
 (
-	id,
-	name NOT NULL,
+	id int,
+	name text NOT NULL,
 	PRIMARY KEY(id)
 );
-INSERT INTO uzsakymo_busenos(id, name) VALUES('1', 'Pateiktas');
-INSERT INTO uzsakymo_busenos(id, name) VALUES('2', 'Patvirtintas');
-INSERT INTO uzsakymo_busenos(id, name) VALUES('3', 'Apmoketas');
-INSERT INTO uzsakymo_busenos(id, name) VALUES('4', 'Ivykdytas');
-INSERT INTO uzsakymo_busenos(id, name) VALUES('5', 'Atsauktas');
+INSERT INTO uzsakymo_busenos(id, name) VALUES(1, 'Pateiktas');
+INSERT INTO uzsakymo_busenos(id, name) VALUES(2, 'Patvirtintas');
+INSERT INTO uzsakymo_busenos(id, name) VALUES(3, 'Apmoketas');
+INSERT INTO uzsakymo_busenos(id, name) VALUES(4, 'Ivykdytas');
+INSERT INTO uzsakymo_busenos(id, name) VALUES(5, 'Atsauktas');
 
 CREATE TABLE stoteles
 (
@@ -57,7 +57,7 @@ CREATE TABLE stoteles
 	vieta_pl double precision NOT NULL,
 	ivertinimas double NOT NULL,
 	vieta_dn double precision NOT NULL,
-	id NOT NULL,
+	id int NOT NULL,
 	PRIMARY KEY(id)
 );
 
@@ -66,7 +66,7 @@ CREATE TABLE marsruto_stoteles
 	eil_nr int NOT NULL,
 	atstumas double precision NOT NULL,
 	laikas int NOT NULL,
-	fk_Stotele_id NOT NULL,
+	fk_Stotele_id int NOT NULL,
 	fk_Marsrutas_nr int NOT NULL,
 	PRIMARY KEY(eil_nr, fk_Marsrutas_nr),
 	CONSTRAINT turi FOREIGN KEY(fk_Stotele_id) REFERENCES stoteles (id),
@@ -82,8 +82,8 @@ CREATE TABLE vartotojai
 	vardas varchar (255) NOT NULL,
 	pavarde varchar (255) NOT NULL,
 	gimimo_data date NOT NULL,
-	role NOT NULL,
-	id NOT NULL,
+	role int NOT NULL,
+	id int NOT NULL,
 	PRIMARY KEY(id),
 	FOREIGN KEY(role) REFERENCES roles (id)
 );
@@ -97,8 +97,8 @@ CREATE TABLE korteles
 	savininko_pavarde varchar (255) NOT NULL,
 	bankas varchar (255) NOT NULL,
 	tipas NOT NULL,
-	id NOT NULL,
-	fk_Vartotojas_id NOT NULL,
+	id int NOT NULL,
+	fk_Vartotojas_id int NOT NULL,
 	PRIMARY KEY(id),
 	UNIQUE(fk_Vartotojas_id),
 	FOREIGN KEY(tipas) REFERENCES korteles_tipai (id),
@@ -110,9 +110,9 @@ CREATE TABLE atsiliepimai
 	data date NOT NULL,
 	ivertinimas smallint NOT NULL,
 	tekstas varchar (255) NOT NULL,
-	id NOT NULL,
-	fk_Vartotojas_id NOT NULL,
-	fk_Stotele_id NOT NULL,
+	id int NOT NULL,
+	fk_Vartotojas_id int NOT NULL,
+	fk_Stotele_id int NOT NULL,
 	PRIMARY KEY(id),
 	CONSTRAINT pateikia FOREIGN KEY(fk_Vartotojas_id) REFERENCES vartotojai (id),
 	CONSTRAINT turi FOREIGN KEY(fk_Stotele_id) REFERENCES stoteles (id)
@@ -123,9 +123,9 @@ CREATE TABLE uzsakymai
 	sukurimo_data date NOT NULL,
 	kaina double precision NOT NULL,
 	busena NOT NULL,
-	id NOT NULL,
-	fk_Kortele_id NOT NULL,
-	fk_Vartotojas_id NOT NULL,
+	id int NOT NULL,
+	fk_Kortele_id int NOT NULL,
+	fk_Vartotojas_id int NOT NULL,
 	PRIMARY KEY(id),
 	FOREIGN KEY(busena) REFERENCES uzsakymo_busenos (id),
 	CONSTRAINT naudoja FOREIGN KEY(fk_Kortele_id) REFERENCES korteles (id),
@@ -136,8 +136,8 @@ CREATE TABLE vertimai
 (
 	kalbos_kodas varchar (255) NOT NULL,
 	tekstas varchar (255) NOT NULL,
-	id NOT NULL,
-	fk_Atsiliepimas_id NOT NULL,
+	id int NOT NULL,
+	fk_Atsiliepimas_id int NOT NULL,
 	PRIMARY KEY(id),
 	CONSTRAINT turi FOREIGN KEY(fk_Atsiliepimas_id) REFERENCES atsiliepimai (id)
 );
@@ -146,9 +146,9 @@ CREATE TABLE krepseliai
 (
 	sukurimo_data date NOT NULL,
 	galutine_kaina double precision NOT NULL,
-	id NOT NULL,
-	fk_Uzsakymas_id NOT NULL,
-	fk_Vartotojas_id NOT NULL,
+	id int NOT NULL,
+	fk_Uzsakymas_id int NOT NULL,
+	fk_Vartotojas_id int NOT NULL,
 	PRIMARY KEY(id),
 	UNIQUE(fk_Uzsakymas_id),
 	CONSTRAINT turi FOREIGN KEY(fk_Uzsakymas_id) REFERENCES uzsakymai (id),
@@ -164,9 +164,9 @@ CREATE TABLE keliones
 	trukme double precision NOT NULL,
 	ivertinimas double precision NOT NULL,
 	kiekis int NOT NULL,
-	id NOT NULL,
-	fk_Krepselis_id NULL,
-	fk_Vartotojas_id NOT NULL,
+	id int NOT NULL,
+	fk_Krepselis_id int NULL,
+	fk_Vartotojas_id int NOT NULL,
 	PRIMARY KEY(id),
 	CONSTRAINT pridedama FOREIGN KEY(fk_Krepselis_id) REFERENCES krepseliai (id),
 	CONSTRAINT planuoja FOREIGN KEY(fk_Vartotojas_id) REFERENCES vartotojai (id)
@@ -179,9 +179,9 @@ CREATE TABLE keliones_marsruto_dalys
 	fk_Marsruto_stotele_eil_nr int NOT NULL,
 	fk_Marsruto_stotele_1 NOT NULL,
 	fk_Marsruto_stotele_eil_nr1 int NOT NULL,
-	fk_Kelione_id NOT NULL,
+	fk_Kelione_id int NOT NULL,
 	PRIMARY KEY(eil_nr, fk_Kelione_id),
 	CONSTRAINT baigiasi FOREIGN KEY(fk_Marsruto_stotele_, fk_Marsruto_stotele_eil_nr) REFERENCES marsruto_stoteles (eil_nr, fk_Marsrutas_nr),
-	CONSTRAINT prasideda FOREIGN KEY(fk_Marsruto_stotele_1, fk_Marsruto_stotele_eil_nr1) REFERENCES marsruto_stoteles (eil_nr, fk_Marsrutas_nr) ,
+	CONSTRAINT prasideda FOREIGN KEY(fk_Marsruto_stotele_1, fk_Marsruto_stotele_eil_nr1) REFERENCES marsruto_stoteles (eil_nr, fk_Marsrutas_nr),
 	CONSTRAINT sudaryta_is FOREIGN KEY(fk_Kelione_id) REFERENCES keliones (id)
 );
