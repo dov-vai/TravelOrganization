@@ -18,6 +18,6 @@ export function onLoad() {
     const marker = L.marker([LAT, LON]).addTo(map);
     
     marker.on('click', () => {
-        window.location.href = '/Stop';
+        window.location.href = '/Stop/1';
     });
 }

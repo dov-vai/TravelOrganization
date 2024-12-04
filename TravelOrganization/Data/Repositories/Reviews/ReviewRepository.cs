@@ -21,6 +21,32 @@ public class ReviewRepository : IReviewRepository
                   """;
         return await connection.QueryAsync<Review>(sql);
     }
+    
+    public async Task<IEnumerable<Review>> GetStopReviews(int stopId, int limit, int offset)
+    {
+        using var connection = _context.CreateConnection();
+    
+        var sql = """
+                  SELECT 
+                      a.id AS Id, 
+                      a.fk_Vartotojas_id AS userId, 
+                      a.fk_Stotele_id AS StopId, 
+                      a.tekstas AS Content, 
+                      a.ivertinimas AS Rating, 
+                      a.data AS Date, 
+                      v.vardas AS Name, 
+                      v.pavarde AS Surname
+                  FROM atsiliepimai a
+                  JOIN vartotojai v ON a.fk_Vartotojas_id = v.id
+                  WHERE a.fk_Stotele_id = @stopId
+                  ORDER BY a.data DESC
+                  LIMIT @limit
+                  OFFSET @offset;
+                  """;
+    
+        return await connection.QueryAsync<Review>(sql, new { stopId, limit, offset });
+    }
+
 
     public async Task Insert(Review review)
     {

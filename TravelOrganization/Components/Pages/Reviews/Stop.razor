@@ -1,9 +1,9 @@
-@page "/Stop"
+@page "/Stop/{StopId:int}"
 @using ApexCharts
-@using TravelOrganization.Data.Repositories.Reviews
+@using TravelOrganization.Controllers
+@using TravelOrganization.Data.Models.Reviews
 @rendermode InteractiveServer
-@inject NavigationManager NavigationManager
-@inject IReviewRepository ReviewRepository
+@inject ReviewController ReviewController
 
 <h3 class="text-center mt-4 mb-4">Stotelės informacija</h3>
 
@@ -31,30 +31,45 @@
 
             <div class="col-md-8">
                 <div class="d-flex justify-content-end align-items-center mt-4 mb-3">
-                    <button type="button" class="btn btn-primary me-2" @onclick="AddReview">Palikti atsiliepimą</button>
-                    <button type="button" class="btn btn-success me-2" @onclick="EditReview">Redaguoti atsiliepimą</button>
-                    <button type="button" class="btn btn-danger" @onclick="DeleteReview">Šalinti atsiliepimą</button>
+                    <button type="button" class="btn btn-primary me-2" @onclick="ReviewController.AddReview">Palikti atsiliepimą</button>
+                    <button type="button" class="btn btn-success me-2" @onclick="ReviewController.EditReview">Redaguoti atsiliepimą</button>
+                    <button type="button" class="btn btn-danger" @onclick="ReviewController.DeleteReview">Šalinti atsiliepimą</button>
                 </div>
                 
                 <h5 class="mb-0">Atsiliepimai</h5>
-                <!-- Review Item - Repeat for each review -->
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <h6 class="card-subtitle mb-2 text-muted">Naudotojas123</h6>
-                                <small class="text-muted">Paskelbta: 2024-01-01</small>
+                
+                @if (_reviews != null)
+                {
+                    @foreach (var review in _reviews)
+                    {
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h6 class="card-subtitle mb-2 text-muted">@review.Name @review.Surname</h6>
+                                        <small class="text-muted">Paskelbta: @review.Date</small>
+                                    </div>
+                                    <div>
+                                        <span class="badge bg-warning text-dark">
+                                            @for (int i = 0; i < review.Rating; i++)
+                                            {
+                                                <text>★</text>
+                                            }
+                                            @for (int i = review.Rating; i < 5; i++)
+                                            {
+                                                <text>☆</text>
+                                            }
+                                        </span>
+                                    </div>
+                                </div>
+                                <p class="card-text mt-2">
+                                    @review.Content
+                                </p>
+                                <button class="btn btn-sm btn-outline-primary">Išversti</button>
                             </div>
-                            <div>
-                                <span class="badge bg-warning text-dark">★ ★ ★ ★ ☆</span>
-                            </div>
-                        </div>
-                        <p class="card-text mt-2">
-                            Keliautojo įžvalgos, komentarai.
-                        </p>
-                        <button class="btn btn-sm btn-outline-primary">Išversti</button>
-                    </div>
-                </div>
+                        </div> 
+                    }
+                }
             </div>
         </div>
     </div>
@@ -81,9 +96,19 @@
 </div>
 
 @code {
+    [Parameter] public int StopId { get; set; }
 
-    // TODO: these pages will be generated, this is just a template for one
+    IEnumerable<Review>? _reviews;
 
+    int _pageSize = 20;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // TODO: check if stop id exists, if not, redirect
+        // TODO: review pagination
+        _reviews = await ReviewController.GetReviews(StopId, 1, _pageSize);
+    }
+    
     public class ReviewRatingData
     {
         public string Star { get; set; }
@@ -98,20 +123,4 @@
         new() { Star = "4 žvaigždės", Count = 50 },
         new() { Star = "5 žvaigždės", Count = 85 }
     ];
-
-    private void AddReview()
-    {
-        NavigationManager.NavigateTo("/ReviewForm");
-    }
-
-    private void DeleteReview()
-    {
-        NavigationManager.NavigateTo("/ReviewDelete");
-    }
-
-    private void EditReview()
-    {
-        NavigationManager.NavigateTo("/ReviewEdit");
-    }
-
 }
