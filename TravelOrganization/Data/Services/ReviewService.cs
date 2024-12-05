@@ -18,5 +18,10 @@ public class ReviewService
         int offset = (page - 1) * pageSize;
         return await _reviewRepository.GetStopReviews(stopId, pageSize, offset);
     }
-    
+
+    public async Task<int> GetStopReviewsPages(int stopId, int pageSize)
+    {
+        int count = await _reviewRepository.GetStopReviewsCount(stopId);
+        return (count + pageSize - 1) / pageSize;
+    }
 }

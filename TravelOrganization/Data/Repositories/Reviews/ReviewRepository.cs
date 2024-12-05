@@ -47,6 +47,19 @@ public class ReviewRepository : IReviewRepository
         return await connection.QueryAsync<Review>(sql, new { stopId, limit, offset });
     }
 
+    public async Task<int> GetStopReviewsCount(int stopId)
+    {
+        using var connection = _context.CreateConnection();
+        
+        var sql = """
+                  SELECT COUNT(*)
+                  FROM atsiliepimai
+                  WHERE fk_Stotele_id = @stopId
+                  """;
+        
+        return await connection.ExecuteScalarAsync<int>(sql, new { stopId });
+    }
+
 
     public async Task Insert(Review review)
     {

@@ -19,6 +19,11 @@ public class ReviewController
     {
         return await _reviewService.GetStopReviews(stopId, page, pageSize);
     }
+
+    public async Task<int> GetStopReviewPages(int stopId, int pageSize)
+    {
+        return await _reviewService.GetStopReviewsPages(stopId, pageSize);
+    }
     
     public void AddReview()
     {
