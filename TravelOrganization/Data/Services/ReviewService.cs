@@ -5,7 +5,7 @@ namespace TravelOrganization.Data.Services;
 
 public class ReviewService
 {
-    IReviewRepository _reviewRepository;
+    private readonly IReviewRepository _reviewRepository;
 
     public ReviewService(IReviewRepository reviewRepository)
     {
@@ -15,13 +15,26 @@ public class ReviewService
 
     public async Task<IEnumerable<Review>> GetStopReviews(int stopId, int page, int pageSize)
     {
-        int offset = (page - 1) * pageSize;
+        var offset = (page - 1) * pageSize;
         return await _reviewRepository.GetStopReviews(stopId, pageSize, offset);
     }
 
     public async Task<int> GetStopReviewsPages(int stopId, int pageSize)
     {
-        int count = await _reviewRepository.GetStopReviewsCount(stopId);
+        var count = await _reviewRepository.GetStopReviewsCount(stopId);
         return (count + pageSize - 1) / pageSize;
+    }
+
+    public async Task AddReview(ReviewForm reviewForm)
+    {
+        await _reviewRepository.Insert(new Review
+        {
+            Id = reviewForm.Id,
+            UserId = reviewForm.UserId,
+            Rating = reviewForm.Rating,
+            Date = DateTime.Now,
+            StopId = reviewForm.StopId,
+            Content = reviewForm.Content!
+        });
     }
 }

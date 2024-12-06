@@ -31,9 +31,15 @@
 
             <div class="col-md-8">
                 <div class="d-flex justify-content-end align-items-center mt-4 mb-3">
-                    <button type="button" class="btn btn-primary me-2" @onclick="ReviewController.AddReview">Palikti atsiliepimą</button>
-                    <button type="button" class="btn btn-success me-2" @onclick="ReviewController.EditReview">Redaguoti atsiliepimą</button>
-                    <button type="button" class="btn btn-danger" @onclick="ReviewController.DeleteReview">Šalinti atsiliepimą</button>
+                    <button type="button" class="btn btn-primary me-2" @onclick="ReviewController.AddReview">
+                        Palikti atsiliepimą
+                    </button>
+                    <button type="button" class="btn btn-success me-2" @onclick="ReviewController.EditReview">
+                        Redaguoti atsiliepimą
+                    </button>
+                    <button type="button" class="btn btn-danger" @onclick="ReviewController.DeleteReview">
+                        Šalinti atsiliepimą
+                    </button>
                 </div>
 
                 <h5 class="mb-0">Atsiliepimai</h5>
@@ -51,11 +57,11 @@
                                     </div>
                                     <div>
                                         <span class="badge bg-warning text-dark">
-                                            @for (int i = 0; i < review.Rating; i++)
+                                            @for (var i = 0; i < review.Rating; i++)
                                             {
                                                 <text>★</text>
                                             }
-                                            @for (int i = review.Rating; i < 5; i++)
+                                            @for (var i = review.Rating; i < 5; i++)
                                             {
                                                 <text>☆</text>
                                             }
@@ -79,11 +85,11 @@
             <li class="page-item @(_currentPage == 1 ? "disabled" : "")">
                 <a class="page-link" @onclick="() => GoToPage(1)" tabindex="-1" aria-disabled="true">Pirmas</a>
             </li>
-            
+
             <li class="page-item @(_currentPage == 1 ? "disabled" : "")">
                 <a class="page-link" @onclick="() => GoToPage(_currentPage - 1)" tabindex="-1">‹</a>
             </li>
-            
+
             @if (_currentPage > 3)
             {
                 <li class="page-item">
@@ -97,18 +103,18 @@
                     <a class="page-link" @onclick="() => GoToPage(i)">@i</a>
                 </li>
             }
-            
+
             @if (_currentPage < _totalPages - 2)
             {
                 <li class="page-item">
                     <span class="page-link">...</span>
                 </li>
             }
-            
+
             <li class="page-item @(_currentPage == _totalPages ? "disabled" : "")">
                 <a class="page-link" @onclick="() => GoToPage(_currentPage + 1)">›</a>
             </li>
-            
+
             <li class="page-item @(_currentPage == _totalPages ? "disabled" : "")">
                 <a class="page-link" @onclick="() => GoToPage(_totalPages)">Paskutinis</a>
             </li>
@@ -122,7 +128,7 @@
     IEnumerable<Review>? _reviews;
     int _currentPage = 1;
     int _totalPages;
-    int _pageSize = 10;
+    readonly int _pageSize = 10;
 
     protected override async Task OnInitializedAsync()
     {
@@ -154,4 +160,5 @@
         new() { Star = "4 žvaigždės", Count = 50 },
         new() { Star = "5 žvaigždės", Count = 85 }
     ];
+
 }

@@ -10,13 +10,14 @@
             <form>
                 <div class="mb-3">
                     <label for="rating" class="form-label">Įvertinimas</label>
-                    <StarRating MaxRating="5" Rating="@currentRating" OnRatingChanged="@OnRatingChanged"/>
+                    <StarRating MaxRating="5" Value="@currentRating" OnRatingChanged="@OnRatingChanged"/>
                     <div class="form-text text-muted">Turite pasirinkti nuo 1 iki 5 žvaigždžių.</div>
                 </div>
 
                 <div class="mb-3">
                     <label for="reviewText" class="form-label">Jūsų atsiliepimas</label>
-                    <textarea id="reviewText" class="form-control" rows="4" placeholder="Rašykite savo atsiliepimą čia..." required></textarea>
+                    <textarea id="reviewText" class="form-control" rows="4"
+                              placeholder="Rašykite savo atsiliepimą čia..." required></textarea>
                 </div>
 
                 <button type="button" class="btn btn-primary" @onclick="SubmitReview">Pateikti atsiliepimą</button>
@@ -30,7 +31,7 @@
      * Review form for the stop. Includes the rating (in stars 1-5). And the review text itself.
      */
 
-    private int currentRating = 0;
+    private int currentRating;
 
     private void SubmitReview()
     {
@@ -41,4 +42,5 @@
     {
         currentRating = rating;
     }
+
 }

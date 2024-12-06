@@ -1,22 +1,23 @@
 <div class="star-rating">
-    @for (int i = 1; i <= MaxRating; i++)
+    @for (var i = 1; i <= MaxRating; i++)
     {
-        int currentRating = i;
-        
-        <span class="star" @onclick="() => SetRating(currentRating)" style="cursor: pointer;">
-            <i class="@(i <= Rating ? "bi bi-star-fill" : "bi bi-star")"></i>
+        var currentRating = i;
+
+        <span class="star" @onclick="() => SetValue(currentRating)" style="cursor: pointer;">
+            <i class="@(i <= Value ? "bi bi-star-fill" : "bi bi-star")"></i>
         </span>
     }
 </div>
 
 @code {
     [Parameter] public int MaxRating { get; set; } = 5;
-    [Parameter] public int Rating { get; set; }
-    [Parameter] public EventCallback<int> OnRatingChanged { get; set; }
+    [Parameter] public int Value { get; set; }
+    [Parameter] public EventCallback<int> ValueChanged { get; set; }
 
-    private async Task SetRating(int rating)
+    private async Task SetValue(int rating)
     {
-        Rating = rating;
-        await OnRatingChanged.InvokeAsync(rating);
+        Value = rating;
+        await ValueChanged.InvokeAsync(rating);
     }
+
 }

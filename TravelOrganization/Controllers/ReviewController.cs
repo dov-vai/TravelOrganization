@@ -6,8 +6,8 @@ namespace TravelOrganization.Controllers;
 
 public class ReviewController
 {
-    ReviewService _reviewService;
-    NavigationManager _navigationManager;
+    private readonly NavigationManager _navigationManager;
+    private readonly ReviewService _reviewService;
 
     public ReviewController(ReviewService reviewService, NavigationManager navigationManager)
     {
@@ -24,12 +24,12 @@ public class ReviewController
     {
         return await _reviewService.GetStopReviewsPages(stopId, pageSize);
     }
-    
+
     public void AddReview()
     {
-        _navigationManager.NavigateTo("/ReviewForm");
+        _navigationManager.NavigateTo("/ReviewForm/1");
     }
-    
+
     public void DeleteReview()
     {
         _navigationManager.NavigateTo("/ReviewDelete");
@@ -39,6 +39,10 @@ public class ReviewController
     {
         _navigationManager.NavigateTo("/ReviewEdit");
     }
-    
-    
+
+    public async Task SubmitReview(ReviewForm reviewForm)
+    {
+        await _reviewService.AddReview(reviewForm);
+        _navigationManager.NavigateTo("/ReviewSuccess/1");
+    }
 }
