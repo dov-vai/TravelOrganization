@@ -110,10 +110,9 @@ CREATE TABLE atsiliepimai
 	data date NOT NULL,
 	ivertinimas smallint NOT NULL,
 	tekstas varchar (255) NOT NULL,
-	id int NOT NULL,
+	id INTEGER PRIMARY KEY,
 	fk_Vartotojas_id int NOT NULL,
 	fk_Stotele_id int NOT NULL,
-	PRIMARY KEY(id),
 	CONSTRAINT pateikia FOREIGN KEY(fk_Vartotojas_id) REFERENCES vartotojai (id),
 	CONSTRAINT turi FOREIGN KEY(fk_Stotele_id) REFERENCES stoteles (id)
 );
@@ -136,9 +135,8 @@ CREATE TABLE vertimai
 (
 	kalbos_kodas varchar (255) NOT NULL,
 	tekstas varchar (255) NOT NULL,
-	id int NOT NULL,
+	id INTEGER PRIMARY KEY,
 	fk_Atsiliepimas_id int NOT NULL,
-	PRIMARY KEY(id),
 	CONSTRAINT turi FOREIGN KEY(fk_Atsiliepimas_id) REFERENCES atsiliepimai (id)
 );
 
