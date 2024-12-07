@@ -1,25 +1,15 @@
 ﻿@page "/ocreation"
-@inject NavigationManager NavigationManager
+@using TravelOrganization.Controllers
+@inject PaymentController PaymentController
 @rendermode InteractiveServer
 <PageTitle>Užsakymo kūrimas</PageTitle>
 
 <h3>Užsakymo kūrimas</h3>
 
-<button @onclick="Pay">Apmokėti per bankininkystę</button>
-<button @onclick="AddCard">(temp)pridėti kortelę</button>
-<button @onclick="Abort">Atšaukti užsakymą</button>
+<button @onclick="PaymentController.ToPayment">Apmokėti per bankininkystę</button>
+<button @onclick="PaymentController.ToCardCreation">(temp)pridėti kortelę</button>
+<button @onclick="PaymentController.ToCart">Atšaukti užsakymą</button>
 
 @code {
-    private void Pay()
-    {
-        NavigationManager.NavigateTo("/payment");
-    }
-    private void AddCard()
-    {
-        NavigationManager.NavigateTo("/ccreation");
-    }
-    private void Abort()
-    {
-        NavigationManager.NavigateTo("/cart");
-    }
+
 }

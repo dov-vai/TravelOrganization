@@ -1,5 +1,6 @@
 ﻿@page "/ccreation"
-@inject NavigationManager NavigationManager
+@using TravelOrganization.Controllers
+@inject PaymentController PaymentController
 @using System.ComponentModel.DataAnnotations
 @rendermode InteractiveServer
 <PageTitle>Kortelės kūrimas</PageTitle>
@@ -28,12 +29,9 @@
     </tbody>
 </table>
 
-<button @onclick="ToProfile">prideti</button>
+<button @onclick="PaymentController.ToProfile">prideti</button>
 
 
 @code {
-    private void ToProfile()
-    {
-        NavigationManager.NavigateTo("/profile");
-    }
+
 }

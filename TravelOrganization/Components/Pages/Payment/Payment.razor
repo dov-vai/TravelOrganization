@@ -1,14 +1,11 @@
 ﻿@page "/payment"
-@inject NavigationManager NavigationManager
+@using TravelOrganization.Controllers
+@inject PaymentController PaymentController
 @rendermode InteractiveServer
 
 <h3>Apmokėjimas</h3>
 
-
-<button @onclick="Abort">Atšaukti užsakymą</button>
+<button @onclick="PaymentController.ToCart">Atšaukti užsakymą</button>
 @code {
-    private void Abort()
-    {
-        NavigationManager.NavigateTo("cart");
-    }
+
 }

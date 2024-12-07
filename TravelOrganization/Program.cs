@@ -23,6 +23,9 @@ builder.Services.AddSingleton<DataContext>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<ReviewService>();
 builder.Services.AddScoped<ReviewController>();
+
+builder.Services.AddScoped<PaymentController>();
+
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
