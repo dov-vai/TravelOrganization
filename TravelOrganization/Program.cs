@@ -1,4 +1,5 @@
 using ApexCharts;
+using DeepL;
 using TravelOrganization.Components;
 using TravelOrganization.Controllers;
 using TravelOrganization.Data;
@@ -22,6 +23,14 @@ builder.Services.AddSingleton<DataContext>();
 
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<ReviewService>();
+builder.Services.AddScoped<ITranslationRepository, TranslationRepository>();
+var deeplApiKey = builder.Configuration["Keys:Deepl"];
+if (string.IsNullOrEmpty(deeplApiKey))
+{
+    throw new ArgumentException("API key for Deepl is missing in configuration.");
+}
+builder.Services.AddSingleton<ITranslator>(_ => new Translator(deeplApiKey));
+builder.Services.AddScoped<TranslationService>();
 builder.Services.AddScoped<ReviewController>();
 
 builder.Services.AddScoped<PaymentController>();

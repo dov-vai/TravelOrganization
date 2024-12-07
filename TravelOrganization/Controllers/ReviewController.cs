@@ -8,11 +8,14 @@ public class ReviewController
 {
     private readonly NavigationManager _navigationManager;
     private readonly ReviewService _reviewService;
+    private readonly TranslationService _translationService;
 
-    public ReviewController(ReviewService reviewService, NavigationManager navigationManager)
+    public ReviewController(ReviewService reviewService, NavigationManager navigationManager,
+        TranslationService translationService)
     {
         _reviewService = reviewService;
         _navigationManager = navigationManager;
+        _translationService = translationService;
     }
 
     public async Task<IEnumerable<Review>> GetReviews(int stopId, int page, int pageSize)
@@ -44,5 +47,10 @@ public class ReviewController
     {
         await _reviewService.AddReview(reviewForm);
         _navigationManager.NavigateTo("/ReviewSuccess/1");
+    }
+
+    public async Task<ReviewTranslation> GetReviewTranslation(int reviewId, string targetLanguageCode)
+    {
+        return await _translationService.GetTranslation(reviewId, targetLanguageCode);
     }
 }

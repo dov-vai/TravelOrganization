@@ -21,11 +21,31 @@ public class ReviewRepository : IReviewRepository
                   """;
         return await connection.QueryAsync<Review>(sql);
     }
-    
+
+    public async Task<Review?> Get(int id)
+    {
+        using var connection = _context.CreateConnection();
+        var sql = """
+                  SELECT
+                      a.id AS Id, 
+                      a.fk_Vartotojas_id AS userId, 
+                      a.fk_Stotele_id AS StopId, 
+                      a.tekstas AS Content, 
+                      a.ivertinimas AS Rating, 
+                      a.data AS Date, 
+                      v.vardas AS Name, 
+                      v.pavarde AS Surname
+                      FROM atsiliepimai a
+                      JOIN vartotojai v ON a.fk_Vartotojas_id = v.id
+                      WHERE a.id = @id
+                  """;
+        return await connection.QuerySingleOrDefaultAsync<Review?>(sql, new { id });
+    }
+
     public async Task<IEnumerable<Review>> GetStopReviews(int stopId, int limit, int offset)
     {
         using var connection = _context.CreateConnection();
-    
+
         var sql = """
                   SELECT 
                       a.id AS Id, 
@@ -43,20 +63,20 @@ public class ReviewRepository : IReviewRepository
                   LIMIT @limit
                   OFFSET @offset;
                   """;
-    
+
         return await connection.QueryAsync<Review>(sql, new { stopId, limit, offset });
     }
 
     public async Task<int> GetStopReviewsCount(int stopId)
     {
         using var connection = _context.CreateConnection();
-        
+
         var sql = """
                   SELECT COUNT(*)
                   FROM atsiliepimai
                   WHERE fk_Stotele_id = @stopId
                   """;
-        
+
         return await connection.ExecuteScalarAsync<int>(sql, new { stopId });
     }
 
@@ -65,8 +85,8 @@ public class ReviewRepository : IReviewRepository
     {
         using var connection = _context.CreateConnection();
         var sql = """
-                  INSERT INTO atsiliepimai (id, fk_Vartotojas_id, fk_Stotele_id, tekstas, ivertinimas, data)
-                  VALUES (@Id, @UserId, @StopId, @Content, @Rating, @Date)
+                  INSERT INTO atsiliepimai (fk_Vartotojas_id, fk_Stotele_id, tekstas, ivertinimas, data)
+                  VALUES (@UserId, @StopId, @Content, @Rating, @Date)
                   """;
         await connection.ExecuteAsync(sql, review);
     }

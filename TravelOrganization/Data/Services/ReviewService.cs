@@ -12,7 +12,6 @@ public class ReviewService
         _reviewRepository = reviewRepository;
     }
 
-
     public async Task<IEnumerable<Review>> GetStopReviews(int stopId, int page, int pageSize)
     {
         var offset = (page - 1) * pageSize;
@@ -29,7 +28,6 @@ public class ReviewService
     {
         await _reviewRepository.Insert(new Review
         {
-            Id = reviewForm.Id,
             UserId = reviewForm.UserId,
             Rating = reviewForm.Rating,
             Date = DateTime.Now,

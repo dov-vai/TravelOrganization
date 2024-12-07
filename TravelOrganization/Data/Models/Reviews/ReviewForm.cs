@@ -4,7 +4,6 @@ namespace TravelOrganization.Data.Models.Reviews;
 
 public class ReviewForm
 {
-    public int Id { get; set; }
     public int UserId { get; set; }
     public int StopId { get; set; }
 

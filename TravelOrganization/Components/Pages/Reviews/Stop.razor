@@ -48,6 +48,7 @@
                 {
                     @foreach (var review in _reviews)
                     {
+                        var currentReviewId = review.Id;
                         <div class="card mb-3">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between">
@@ -71,7 +72,9 @@
                                 <p class="card-text mt-2">
                                     @review.Content
                                 </p>
-                                <button class="btn btn-sm btn-outline-primary">Išversti</button>
+                                <button class="btn btn-sm btn-outline-primary"
+                                        @onclick="() => GetReviewTranslation(currentReviewId!.Value)">Išversti
+                                </button>
                             </div>
                         </div>
                     }
@@ -145,6 +148,12 @@
             _currentPage = page;
             _reviews = await ReviewController.GetReviews(StopId, _currentPage, _pageSize);
         }
+    }
+
+    private async Task GetReviewTranslation(int reviewId)
+    {
+        // TODO: language code hard-coded, needs some selection logic?
+        await ReviewController.GetReviewTranslation(reviewId, "en-US");
     }
 
     public class ReviewRatingData
