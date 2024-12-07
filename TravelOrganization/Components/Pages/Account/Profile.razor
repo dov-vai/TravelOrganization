@@ -1,0 +1,118 @@
+﻿@page "/profile"
+@using System.Net.Http.Json
+@inject NavigationManager Navigation
+@inject IHttpClientFactory HttpClientFactory
+@inject IJSRuntime JS
+
+<h3>Profile Page</h3>
+
+@if (user == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; margin-top: 2rem;">
+        <div style="padding-left: 2rem;">
+            <label>Email</label><br/>
+            <InputText @bind-Value="user.Email" style="width: 100%;" /><br/><br/>
+            
+            <label>Vardas</label><br/>
+            <InputText @bind-Value="user.Name" style="width: 100%;" /><br/><br/>
+            
+            <label>Pavardė</label><br/>
+            <InputText @bind-Value="user.Surname" style="width: 100%;" /><br/><br/>
+
+            <button @onclick="TestClick">Atnaujinti</button>
+            <button @onclick="DeleteAccount" style="margin-left: 10px;">Ištrinti paskyrą</button>
+        </div>
+
+        <div style="text-align: center;">
+            <img src="@profileImageUrl" alt="Profile Picture" style="width: 150px; height: 150px; border-radius: 50%;" />
+            
+            <div style="margin-top: 10px;">
+                <a href="/profilePicture">Edit</a>
+            </div>
+        </div>
+
+        <button @onclick="CCard">Priskirti kortelę</button>
+        <button @onclick="WCard">Peržiūrėti kortelę</button>
+        <button @onclick="WHistory">Peržiūrėti kelionių istoriją</button>
+    </div>
+}
+
+@code {
+    private UserProfile user;
+    private string profileImageUrl = "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var client = HttpClientFactory.CreateClient();
+        client.BaseAddress = new Uri("http://localhost:5257/");
+        user = await client.GetFromJsonAsync<UserProfile>("api/User/profile");
+        if (!string.IsNullOrEmpty(user?.ProfilePictureLink))
+        {
+            profileImageUrl = user.ProfilePictureLink;
+        }
+    }
+
+    private async Task TestClick()
+    {
+        await JS.InvokeVoidAsync("alert", "Test Click Fired!");
+    }
+
+    private async Task UpdateProfile()
+    {
+        var client = HttpClientFactory.CreateClient();
+        client.BaseAddress = new Uri("http://localhost:5257/");
+        var response = await client.PostAsJsonAsync("api/User/update", user);
+        if (response.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/");
+        }
+        else
+        {
+            // Rodykite klaidos pranešimą
+        }
+    }
+
+    private async Task DeleteAccount()
+    {
+        var client = HttpClientFactory.CreateClient();
+        client.BaseAddress = new Uri("http://localhost:5257/");
+        var response = await client.DeleteAsync("api/User/delete");
+        if (response.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/login");
+        }
+        else
+        {
+            // Rodykite klaidos pranešimą
+        }
+    }
+
+    private void CCard()
+    {
+        Navigation.NavigateTo("/ccreation");
+    }
+    private void WCard()
+    {
+        Navigation.NavigateTo("/cview");
+    }
+    private void WHistory()
+    {
+        Navigation.NavigateTo("/trip/history");
+    }
+
+    public class UserProfile
+    {
+        public int Id { get; set; }
+        public string Email { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public DateTime BirthDate { get; set; }
+        public DateTime RegistrationDate { get; set; }
+        public string ProfilePictureLink { get; set; }
+        public string Role { get; set; }
+    }
+}

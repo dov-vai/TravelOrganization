@@ -4,6 +4,11 @@ using TravelOrganization.Controllers;
 using TravelOrganization.Data;
 using TravelOrganization.Data.Repositories.Reviews;
 using TravelOrganization.Data.Services;
+using TravelOrganization.Data.Models.Account;
+using TravelOrganization.Data.Repositories.Account;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,9 +23,31 @@ builder.Services.AddSingleton<DataContext>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<ReviewService>();
 builder.Services.AddScoped<ReviewController>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<CustomAuthenticationStateProvider>();
+builder.Services.AddControllers();
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/login";
+    });
+
+builder.Services.AddAuthorization();
+
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 var app = builder.Build();
+
+app.MapControllers();
 
 {
     using var scope = app.Services.CreateScope();
@@ -28,16 +55,25 @@ var app = builder.Build();
     await context.Init();
 }
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+app.Use(async (context, next) =>
+{
+    var logger = app.Services.GetRequiredService<ILogger<Program>>();
+    context.Request.EnableBuffering();
+    var bodyAsText = await new StreamReader(context.Request.Body).ReadToEndAsync();
+    context.Request.Body.Position = 0;
+    logger.LogInformation($"Request Body: {bodyAsText}");
+    await next.Invoke();
+});
 
+app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
