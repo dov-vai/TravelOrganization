@@ -16,6 +16,20 @@
 <body>
     <Routes />
     <script src="_framework/blazor.web.js"></script>
+    <script>
+        function setUserLoggedIn() {
+            localStorage.setItem('isLoggedIn', 'true');
+        }
+
+        function setUserLoggedOut() {
+            localStorage.removeItem('isLoggedIn');
+        }
+
+        function checkUserLoggedIn() {
+            return localStorage.getItem('isLoggedIn') === 'true';
+        }
+    </script>
+
 </body>
 
 </html>
