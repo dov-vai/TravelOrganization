@@ -9,4 +9,5 @@ public interface IReviewRepository
     Task<IEnumerable<Review>> GetStopReviews(int stopId, int limit, int offset);
     Task<int> GetStopReviewsCount(int stopId);
     Task<Review?> Get(int id);
+    Task<ReviewsSummary> GetStopReviewsSummary(int stopId);
 }

@@ -90,4 +90,20 @@ public class ReviewRepository : IReviewRepository
                   """;
         await connection.ExecuteAsync(sql, review);
     }
+
+    public async Task<ReviewsSummary> GetStopReviewsSummary(int stopId)
+    {
+        using var connection = _context.CreateConnection();
+        var sql = """
+                  SELECT 
+                      SUM(CASE WHEN ivertinimas = 1 THEN 1 ELSE 0 END) AS OneStar,
+                      SUM(CASE WHEN ivertinimas = 2 THEN 1 ELSE 0 END) AS TwoStars,
+                      SUM(CASE WHEN ivertinimas = 3 THEN 1 ELSE 0 END) AS ThreeStars,
+                      SUM(CASE WHEN ivertinimas = 4 THEN 1 ELSE 0 END) AS FourStars,
+                      SUM(CASE WHEN ivertinimas = 5 THEN 1 ELSE 0 END) AS FiveStars
+                  FROM atsiliepimai 
+                  WHERE fk_Stotele_id = @stopId
+                  """;
+        return await connection.QuerySingleAsync<ReviewsSummary>(sql, new { stopId });
+    }
 }

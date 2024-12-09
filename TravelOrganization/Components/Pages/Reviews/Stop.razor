@@ -19,14 +19,17 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4 pt-5 d-flex justify-content-center">
-                <ApexChart TItem="ReviewRatingData" Width="300" Height="200">
-                    <ApexPointSeries TItem="ReviewRatingData"
-                                     Name="Rating"
-                                     Items="RatingData"
-                                     XValue="@(item => item.Star)"
-                                     YValue="@(item => item.Count)"
-                                     SeriesType="SeriesType.Donut"/>
-                </ApexChart>
+                @if (_ratingData != null)
+                {
+                    <ApexChart TItem="StopRatingData" Width="300" Height="200">
+                        <ApexPointSeries TItem="StopRatingData"
+                                         Name="Kiekis"
+                                         Items="_ratingData"
+                                         XValue="@(item => item.Star)"
+                                         YValue="@(item => item.Count)"
+                                         SeriesType="SeriesType.Area"/>
+                    </ApexChart>
+                }
             </div>
 
             <div class="col-md-8">
@@ -133,12 +136,14 @@
     int _currentPage = 1;
     int _totalPages;
     readonly int _pageSize = 10;
+    List<StopRatingData>? _ratingData;
 
     protected override async Task OnInitializedAsync()
     {
         // TODO: check if stop id exists, if not, redirect
         _reviews = await ReviewController.GetReviews(StopId, _currentPage, _pageSize);
         _totalPages = await ReviewController.GetStopReviewPages(StopId, _pageSize);
+        _ratingData = await ReviewController.GetStopRatingData(StopId);
     }
 
     private async Task GoToPage(int page)
@@ -155,20 +160,5 @@
         // TODO: language code hard-coded, needs some selection logic?
         await ReviewController.GetReviewTranslation(reviewId, "en-US");
     }
-
-    public class ReviewRatingData
-    {
-        public string Star { get; set; }
-        public int Count { get; set; }
-    }
-
-    readonly List<ReviewRatingData> RatingData =
-    [
-        new() { Star = "1 žvaigždė", Count = 5 },
-        new() { Star = "2 žvaigždės", Count = 12 },
-        new() { Star = "3 žvaigždės", Count = 30 },
-        new() { Star = "4 žvaigždės", Count = 50 },
-        new() { Star = "5 žvaigždės", Count = 85 }
-    ];
 
 }

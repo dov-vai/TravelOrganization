@@ -53,4 +53,14 @@ public class ReviewController
     {
         return await _translationService.GetTranslation(reviewId, targetLanguageCode);
     }
+
+    public async Task<List<StopRatingData>?> GetStopRatingData(int stopId)
+    {
+        var summary = await _reviewService.GetReviewsSummary(stopId);
+
+        if (summary == null)
+            return null;
+
+        return StopRatingData.GetRatingData(summary);
+    }
 }

@@ -35,4 +35,17 @@ public class ReviewService
             Content = reviewForm.Content!
         });
     }
+
+    public async Task<ReviewsSummary?> GetReviewsSummary(int stopId)
+    {
+        // it always returns a value because the sums would default to 0
+        // but if they're all 0, just return null, because no meaningful data was found
+        var summary = await _reviewRepository.GetStopReviewsSummary(stopId);
+        if (summary is { OneStar: 0, TwoStars: 0, ThreeStars: 0, FourStars: 0, FiveStars: 0 })
+        {
+            return null;
+        }
+
+        return summary;
+    }
 }
