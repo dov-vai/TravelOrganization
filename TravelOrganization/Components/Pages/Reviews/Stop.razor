@@ -73,10 +73,20 @@
                                     </div>
                                 </div>
                                 <p class="card-text mt-2">
-                                    @review.Content
+                                    @if (_translations.ContainsKey(currentReviewId!.Value) && _translations[currentReviewId!.Value].ShowTranslated)
+                                    {
+                                        @(_translations[currentReviewId!.Value].Translation.Content)
+                                    }
+                                    else
+                                    {
+                                        @review.Content
+                                    }
                                 </p>
                                 <button class="btn btn-sm btn-outline-primary"
-                                        @onclick="() => GetReviewTranslation(currentReviewId!.Value)">Išversti
+                                        @onclick="() => GetReviewTranslation(currentReviewId!.Value)">
+                                    @(_translations.ContainsKey(currentReviewId!.Value) && _translations[currentReviewId!.Value].ShowTranslated
+                                        ? "Originalas"
+                                        : "Išversti")
                                 </button>
                             </div>
                         </div>
@@ -137,6 +147,7 @@
     int _totalPages;
     readonly int _pageSize = 10;
     List<StopRatingData>? _ratingData;
+    readonly Dictionary<int, TranslationState> _translations = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -157,8 +168,14 @@
 
     private async Task GetReviewTranslation(int reviewId)
     {
-        // TODO: language code hard-coded, needs some selection logic?
-        await ReviewController.GetReviewTranslation(reviewId, "en-US");
-    }
+        if (_translations.ContainsKey(reviewId))
+        {
+            _translations[reviewId].ShowTranslated = !_translations[reviewId].ShowTranslated;
+            return;
+        }
 
+        // TODO: language code hard-coded, needs some selection logic?
+        var translation = await ReviewController.GetReviewTranslation(reviewId, "en-US");
+        _translations[reviewId] = new TranslationState { Translation = translation, ShowTranslated = true };
+    }
 }
