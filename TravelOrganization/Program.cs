@@ -72,16 +72,19 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     app.UseHsts();
 }
-
-app.Use(async (context, next) =>
+else
 {
-    var logger = app.Services.GetRequiredService<ILogger<Program>>();
-    context.Request.EnableBuffering();
-    var bodyAsText = await new StreamReader(context.Request.Body).ReadToEndAsync();
-    context.Request.Body.Position = 0;
-    logger.LogInformation($"Request Body: {bodyAsText}");
-    await next.Invoke();
-});
+    app.Use(async (context, next) =>
+    {
+        var logger = app.Services.GetRequiredService<ILogger<Program>>();
+        context.Request.EnableBuffering();
+        var bodyAsText = await new StreamReader(context.Request.Body).ReadToEndAsync();
+        context.Request.Body.Position = 0;
+        if (bodyAsText.Length != 0)
+            logger.LogInformation($"Request Body: {bodyAsText}");
+        await next.Invoke();
+    });
+}
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
