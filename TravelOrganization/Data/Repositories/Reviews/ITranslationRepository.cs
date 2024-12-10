@@ -6,4 +6,5 @@ public interface ITranslationRepository
 {
     Task<ReviewTranslation?> Get(int reviewId, string targetLanguageCode);
     Task Insert(ReviewTranslation translation);
+    Task Delete(int reviewId);
 }

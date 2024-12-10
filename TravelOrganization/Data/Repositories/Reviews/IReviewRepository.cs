@@ -10,4 +10,5 @@ public interface IReviewRepository
     Task<int> GetStopReviewsCount(int stopId);
     Task<Review?> Get(int id);
     Task<ReviewsSummary> GetStopReviewsSummary(int stopId);
+    Task Update(Review review);
 }

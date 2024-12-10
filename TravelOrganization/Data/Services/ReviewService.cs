@@ -6,10 +6,12 @@ namespace TravelOrganization.Data.Services;
 public class ReviewService
 {
     private readonly IReviewRepository _reviewRepository;
+    private readonly ITranslationRepository _translationRepository;
 
-    public ReviewService(IReviewRepository reviewRepository)
+    public ReviewService(IReviewRepository reviewRepository, ITranslationRepository translationRepository)
     {
         _reviewRepository = reviewRepository;
+        _translationRepository = translationRepository;
     }
 
     public async Task<IEnumerable<Review>> GetStopReviews(int stopId, int page, int pageSize)
@@ -47,5 +49,45 @@ public class ReviewService
         }
 
         return summary;
+    }
+
+    public async Task<ReviewForm?> GetReviewForm(int reviewId)
+    {
+        var review = await _reviewRepository.Get(reviewId);
+
+        if (review == null)
+            return null;
+        
+        return new ReviewForm
+        {
+            Id = review.Id!.Value,
+            UserId = review.UserId,
+            StopId = review.StopId,
+            Rating = review.Rating,
+            Content = review.Content,
+        };
+    }
+
+    public async Task UpdateReview(ReviewForm reviewForm)
+    {
+        var review = await _reviewRepository.Get(reviewForm.Id);
+        
+        // ???
+        if (review == null)
+            return;
+        
+        await _reviewRepository.Update(new()
+        {
+            Id = reviewForm.Id,
+            UserId = reviewForm.UserId,
+            Rating = reviewForm.Rating,
+            Content = reviewForm.Content!,
+            Date = DateTime.Now,
+            StopId = reviewForm.StopId
+        });
+        
+        // delete translations if the content was updated
+        if (reviewForm.Content != review.Content)
+            await _translationRepository.Delete(reviewForm.Id);
     }
 }

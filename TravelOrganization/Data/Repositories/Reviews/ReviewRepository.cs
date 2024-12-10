@@ -106,4 +106,18 @@ public class ReviewRepository : IReviewRepository
                   """;
         return await connection.QuerySingleAsync<ReviewsSummary>(sql, new { stopId });
     }
+
+    public async Task Update(Review review)
+    {
+        using var connection = _context.CreateConnection();
+        var sql = """
+                  UPDATE atsiliepimai
+                  SET
+                    tekstas = @Content,
+                    ivertinimas = @Rating,
+                    data = @Date
+                  WHERE id = @Id
+                  """;
+        await connection.ExecuteAsync(sql, review);
+    }
 }

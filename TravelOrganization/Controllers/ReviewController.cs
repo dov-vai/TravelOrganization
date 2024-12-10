@@ -1,3 +1,4 @@
+using System.Xml.XPath;
 using Microsoft.AspNetCore.Components;
 using TravelOrganization.Data.Models.Reviews;
 using TravelOrganization.Data.Services;
@@ -40,12 +41,18 @@ public class ReviewController
 
     public void EditReview()
     {
-        _navigationManager.NavigateTo("/ReviewEdit");
+        _navigationManager.NavigateTo("/ReviewEdit/1");
     }
 
     public async Task SubmitReview(ReviewForm reviewForm)
     {
         await _reviewService.AddReview(reviewForm);
+        _navigationManager.NavigateTo("/ReviewSuccess/1");
+    }
+
+    public async Task UpdateReview(ReviewForm reviewForm)
+    {
+        await _reviewService.UpdateReview(reviewForm);
         _navigationManager.NavigateTo("/ReviewSuccess/1");
     }
 
@@ -62,5 +69,15 @@ public class ReviewController
             return null;
 
         return StopRatingData.GetRatingData(summary);
+    }
+
+    public async Task<ReviewForm?> LoadReviewForm(int reviewId)
+    {
+        var review = await _reviewService.GetReviewForm(reviewId);
+        
+        if (review == null)
+            _navigationManager.NavigateTo("/routemap");
+
+        return review;
     }
 }

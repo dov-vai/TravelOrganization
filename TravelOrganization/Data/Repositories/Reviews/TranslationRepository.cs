@@ -37,4 +37,14 @@ public class TranslationRepository : ITranslationRepository
                   """;
         await connection.ExecuteAsync(sql, translation);
     }
+
+    public async Task Delete(int reviewId)
+    {
+        using var connection = _context.CreateConnection();
+        var sql = """
+                  DELETE FROM vertimai
+                  WHERE fk_Atsiliepimas_id = @reviewId
+                  """;
+        await connection.ExecuteAsync(sql, new { reviewId });
+    }
 }

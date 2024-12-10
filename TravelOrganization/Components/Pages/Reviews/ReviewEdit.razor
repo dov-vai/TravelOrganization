@@ -1,46 +1,52 @@
-@page "/ReviewEdit"
+@page "/ReviewEdit/{ReviewId:int}"
+@using TravelOrganization.Controllers
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
+@inject ReviewController ReviewController
 
-<div class="container mt-4">
-    <div class="card">
-        <div class="card-body">
-            <h4 class="card-title">Redaguoti atsiliepimą</h4>
+@if (_reviewForm != null)
+{
+    <EditForm Model="_reviewForm" OnValidSubmit="OnValidSubmit" FormName="ReviewForm">
+        <AntiforgeryToken/>
+        <DataAnnotationsValidator/>
+        <div class="container mt-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Palikti atsiliepimą</h4>
 
-            <form>
-                <div class="mb-3">
-                    <label for="rating" class="form-label">Įvertinimas</label>
-                    <StarRating MaxRating="5" Value="@currentRating" OnRatingChanged="@OnRatingChanged"/>
-                    <div class="form-text text-muted">Turite pasirinkti nuo 1 iki 5 žvaigždžių.</div>
+                    <div class="mb-3">
+                        <label for="Rating" class="form-label">Įvertinimas</label>
+                        <StarRating MaxRating="5" @bind-Value="_reviewForm.Rating"/>
+                        <ValidationMessage For="() => _reviewForm.Rating"></ValidationMessage>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="Content" class="form-label">Jūsų atsiliepimas</label>
+                        <InputTextArea @bind-Value="_reviewForm.Content" class="form-control"></InputTextArea>
+                        <ValidationMessage For="() => _reviewForm.Content"></ValidationMessage>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Pateikti</button>
                 </div>
-
-                <div class="mb-3">
-                    <label for="reviewText" class="form-label">Jūsų atsiliepimas</label>
-                    <textarea id="reviewText" class="form-control" rows="4"
-                              placeholder="Rašykite savo atsiliepimą čia..." required></textarea>
-                </div>
-
-                <button type="button" class="btn btn-primary" @onclick="SubmitReview">Pateikti atsiliepimą</button>
-            </form>
+            </div>
         </div>
-    </div>
-</div>
+    </EditForm> 
+}
 
 @code {
-    /*
-     * Review form for the stop. Includes the rating (in stars 1-5). And the review text itself.
-     */
+    [Parameter] public int ReviewId { get; set; }
 
-    private int currentRating;
+    Data.Models.Reviews.ReviewForm? _reviewForm;
 
-    private void SubmitReview()
+    protected override async Task OnInitializedAsync()
     {
-        NavigationManager.NavigateTo("/ReviewSuccess");
+        // TODO: check if review belongs to user
+        _reviewForm = await ReviewController.LoadReviewForm(ReviewId);
     }
 
-    private void OnRatingChanged(int rating)
+    private async Task OnValidSubmit()
     {
-        currentRating = rating;
+        await ReviewController.UpdateReview(_reviewForm!);
     }
 
 }
