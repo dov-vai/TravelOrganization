@@ -36,7 +36,7 @@ public class ReviewController
 
     public void DeleteReview()
     {
-        _navigationManager.NavigateTo("/ReviewDelete");
+        _navigationManager.NavigateTo("/ReviewDelete/1");
     }
 
     public void EditReview()
@@ -79,5 +79,16 @@ public class ReviewController
             _navigationManager.NavigateTo("/routemap");
 
         return review;
+    }
+
+    public async Task DeleteReview(int reviewId)
+    {
+        await _reviewService.DeleteReview(reviewId);
+        _navigationManager.NavigateTo("/routemap");
+    }
+
+    public void BackToStops()
+    {
+        _navigationManager.NavigateTo("/routemap");
     }
 }

@@ -90,4 +90,10 @@ public class ReviewService
         if (reviewForm.Content != review.Content)
             await _translationRepository.Delete(reviewForm.Id);
     }
+
+    public async Task DeleteReview(int reviewId)
+    {
+        await _translationRepository.Delete(reviewId);
+        await _reviewRepository.Delete(reviewId);
+    }
 }

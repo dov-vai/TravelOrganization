@@ -1,6 +1,7 @@
-@page "/ReviewDelete"
+@page "/ReviewDelete/{ReviewId:int}"
+@using TravelOrganization.Controllers
 @rendermode InteractiveServer
-@inject NavigationManager NavigationManager
+@inject ReviewController ReviewController
 
 <div class="d-flex flex-column justify-content-center align-items-center">
     <div class="card" style="width: 18rem; margin: 20px;">
@@ -10,23 +11,13 @@
                 Ar tikrai norite ištrinti šį atsiliepimą?
             </p>
             <div class="d-flex justify-content-end">
-                <button @onclick="Confirm" class="btn btn-danger me-2">Patvirtinti</button>
-                <button @onclick="Cancel" class="btn btn-secondary">Atšaukti</button>
+                <button @onclick="()=> ReviewController.DeleteReview(ReviewId)" class="btn btn-danger me-2">Patvirtinti</button>
+                <button @onclick="ReviewController.BackToStops" class="btn btn-secondary">Atšaukti</button>
             </div>
         </div>
     </div>
 </div>
 
 @code {
-
-    private void Confirm()
-    {
-        NavigationManager.NavigateTo("/Stop");
-    }
-
-    private void Cancel()
-    {
-        NavigationManager.NavigateTo("/Stop");
-    }
-
+    [Parameter] public int ReviewId { get; set; }
 }

@@ -11,4 +11,5 @@ public interface IReviewRepository
     Task<Review?> Get(int id);
     Task<ReviewsSummary> GetStopReviewsSummary(int stopId);
     Task Update(Review review);
+    Task Delete(int id);
 }

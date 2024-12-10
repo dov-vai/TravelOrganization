@@ -120,4 +120,14 @@ public class ReviewRepository : IReviewRepository
                   """;
         await connection.ExecuteAsync(sql, review);
     }
+
+    public async Task Delete(int id)
+    {
+        using var connection = _context.CreateConnection();
+        var sql = """
+                  DELETE FROM atsiliepimai
+                  WHERE id = @Id
+                  """;
+        await connection.ExecuteAsync(sql, new { Id = id });
+    }
 }
