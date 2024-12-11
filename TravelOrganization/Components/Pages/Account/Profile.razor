@@ -1,104 +1,170 @@
 ﻿@page "/profile"
 @using System.Net.Http.Json
-@inject NavigationManager Navigation
+@using TravelOrganization.Data.Services
 @inject IHttpClientFactory HttpClientFactory
+@inject NavigationManager Navigation
 @inject IJSRuntime JS
+@inject BasicAuthMessageHandler AuthHandler
+@inject IBasicAuthCredentials AuthCredentials
+
 
 <h3>Profile Page</h3>
 
-@if (user == null)
+@if (isLoading)
 {
     <p>Loading...</p>
 }
-else
+else if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger" role="alert">
+        @errorMessage
+    </div>
+}
+else if (user != null)
 {
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; margin-top: 2rem;">
         <div style="padding-left: 2rem;">
-            <label>Email</label><br/>
-            <InputText @bind-Value="user.Email" style="width: 100%;" /><br/><br/>
-            
-            <label>Vardas</label><br/>
-            <InputText @bind-Value="user.Name" style="width: 100%;" /><br/><br/>
-            
-            <label>Pavardė</label><br/>
-            <InputText @bind-Value="user.Surname" style="width: 100%;" /><br/><br/>
+            <label>Email</label><br />
+            <InputText @bind-Value="user.Email" style="width: 100%;" /><br /><br />
 
-            <button @onclick="TestClick">Atnaujinti</button>
-            <button @onclick="DeleteAccount" style="margin-left: 10px;">Ištrinti paskyrą</button>
+            <label>Name</label><br />
+            <InputText @bind-Value="user.Name" style="width: 100%;" /><br /><br />
+
+            <label>Surname</label><br />
+            <InputText @bind-Value="user.Surname" style="width: 100%;" /><br /><br />
+
+            <button @onclick="UpdateProfile">Update</button>
+            <button @onclick="DeleteAccount" style="margin-left: 10px;">Delete Account</button>
+            <button @onclick="Logout" style="margin-left: 10px;">Logout</button>
         </div>
 
         <div style="text-align: center;">
             <img src="@profileImageUrl" alt="Profile Picture" style="width: 150px; height: 150px; border-radius: 50%;" />
-            
+
             <div style="margin-top: 10px;">
                 <a href="/profilePicture">Edit</a>
             </div>
         </div>
 
-        <button @onclick="CCard">Priskirti kortelę</button>
-        <button @onclick="WCard">Peržiūrėti kortelę</button>
-        <button @onclick="WHistory">Peržiūrėti kelionių istoriją</button>
+        <button @onclick="CCard">Assign Card</button>
+        <button @onclick="WCard">View Card</button>
+        <button @onclick="WHistory">View Travel History</button>
     </div>
 }
 
 @code {
     private UserProfile user;
     private string profileImageUrl = "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg";
+    private string errorMessage;
+    private bool isLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
-        var client = HttpClientFactory.CreateClient();
-        client.BaseAddress = new Uri("http://localhost:5257/");
-        user = await client.GetFromJsonAsync<UserProfile>("api/User/profile");
-        if (!string.IsNullOrEmpty(user?.ProfilePictureLink))
-        {
-            profileImageUrl = user.ProfilePictureLink;
-        }
+        await LoadUserProfile();
     }
 
-    private async Task TestClick()
+    private async Task LoadUserProfile()
     {
-        await JS.InvokeVoidAsync("alert", "Test Click Fired!");
+        try
+        {
+            var client = HttpClientFactory.CreateClient("BasicAuthClient");
+            client.BaseAddress = new Uri("http://localhost:5257/");
+            var response = await client.GetAsync("api/User/profile");
+
+            if (response.IsSuccessStatusCode)
+            {
+                user = await response.Content.ReadFromJsonAsync<UserProfile>();
+                if (!string.IsNullOrEmpty(user?.ProfilePictureLink))
+                {
+                    profileImageUrl = user.ProfilePictureLink;
+                }
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                // Credentials might be invalid; redirect to login
+                Navigation.NavigateTo("/login");
+            }
+            else
+            {
+                errorMessage = "Failed to load profile.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An error occurred: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
     }
 
     private async Task UpdateProfile()
     {
-        var client = HttpClientFactory.CreateClient();
-        client.BaseAddress = new Uri("http://localhost:5257/");
-        var response = await client.PostAsJsonAsync("api/User/update", user);
-        if (response.IsSuccessStatusCode)
+        try
         {
-            Navigation.NavigateTo("/");
+            var client = HttpClientFactory.CreateClient("BasicAuthClient");
+            var response = await client.PostAsJsonAsync("api/User/update", user);
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Optionally, show a success message
+                await JS.InvokeVoidAsync("alert", "Profile updated successfully!");
+            }
+            else
+            {
+                var rawResponse = await response.Content.ReadAsStringAsync();
+                errorMessage = !string.IsNullOrEmpty(rawResponse) ? rawResponse : "Failed to update profile.";
+            }
         }
-        else
+        catch (Exception ex)
         {
-            // Rodykite klaidos pranešimą
+            errorMessage = $"An error occurred: {ex.Message}";
         }
     }
 
     private async Task DeleteAccount()
     {
-        var client = HttpClientFactory.CreateClient();
-        client.BaseAddress = new Uri("http://localhost:5257/");
-        var response = await client.DeleteAsync("api/User/delete");
-        if (response.IsSuccessStatusCode)
+        try
         {
-            Navigation.NavigateTo("/login");
+            var client = HttpClientFactory.CreateClient("BasicAuthClient");
+            client.BaseAddress = new Uri("http://localhost:5257/");
+            var response = await client.DeleteAsync("api/User/delete");
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Clear credentials and navigate to login
+                AuthCredentials.AuthorizationHeader = null;
+                Navigation.NavigateTo("/login");
+            }
+            else
+            {
+                var rawResponse = await response.Content.ReadAsStringAsync();
+                errorMessage = !string.IsNullOrEmpty(rawResponse) ? rawResponse : "Failed to delete account.";
+            }
         }
-        else
+        catch (Exception ex)
         {
-            // Rodykite klaidos pranešimą
+            errorMessage = $"An error occurred: {ex.Message}";
         }
+    }
+
+    private async Task Logout()
+    {
+        AuthCredentials.AuthorizationHeader = null;
+        Navigation.NavigateTo("/login");
     }
 
     private void CCard()
     {
         Navigation.NavigateTo("/ccreation");
     }
+
     private void WCard()
     {
         Navigation.NavigateTo("/cview");
     }
+
     private void WHistory()
     {
         Navigation.NavigateTo("/trip/history");

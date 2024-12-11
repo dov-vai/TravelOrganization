@@ -4,23 +4,24 @@ using TravelOrganization.Data.Repositories.Account;
 using TravelOrganization.Data.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 
 namespace TravelOrganization.Controllers.Account
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = "BasicAuthentication", Policy = "BasicPolicy")]
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
-        private readonly IAuthService _authService;
         private readonly IEmailService _emailService;
+        private readonly IPasswordHasher<User> _passwordHasher;
 
-        public UserController(IUserRepository userRepository, IAuthService authService, IEmailService emailService)
+        public UserController(IUserRepository userRepository, IEmailService emailService, IPasswordHasher<User> passwordHasher)
         {
             _userRepository = userRepository;
-            _authService = authService;
             _emailService = emailService;
+            _passwordHasher = passwordHasher;
         }
 
         [HttpGet("profile")]
@@ -59,7 +60,6 @@ namespace TravelOrganization.Controllers.Account
             user.Email = model.Email;
             user.Name = model.Name;
             user.Surname = model.Surname;
-            user.Password = model.Password;
 
             await _userRepository.UpdateUserAsync(user);
             return Ok(new { message = "Profile updated successfully" });
@@ -79,16 +79,13 @@ namespace TravelOrganization.Controllers.Account
                 Name = model.Name,
                 Surname = model.Surname,
                 RegistrationDate = DateTime.UtcNow,
-                RoleId = 1, // Client Role
+                RoleId = 1,
                 ProfilePictureLink = "default.jpg",
                 EmailConfirmed = false,
                 ConfirmationToken = Guid.NewGuid().ToString(),
-                TokenExpiration = DateTime.UtcNow.AddHours(24) // Token valid for 24 hours
+                TokenExpiration = DateTime.UtcNow.AddHours(24)
             };
-
-            user.Password = _authService is AuthService authService
-                ? authService.HashPassword(user, model.Password)
-                : throw new Exception("AuthService not properly configured");
+            user.Password = _passwordHasher.HashPassword(user, model.Password);
 
             await _userRepository.AddUserAsync(user);
 
@@ -121,8 +118,6 @@ namespace TravelOrganization.Controllers.Account
                 return BadRequest(new { message = "Token expired. Please request a new confirmation email." });
 
             user.EmailConfirmed = true;
-            user.ConfirmationToken = null; // Clear the token after confirmation
-            user.TokenExpiration = null;
             await _userRepository.UpdateUserAsync(user);
 
             return Ok(new { message = "Email confirmed successfully" });
@@ -138,14 +133,14 @@ namespace TravelOrganization.Controllers.Account
                 return Unauthorized();
 
             await _userRepository.DeleteUserAsync(userId);
-            await _authService.LogoutAsync(HttpContext);
             return Ok(new { message = "Account deleted successfully" });
         }
 
         [HttpPost("uploadProfilePicture")]
         public async Task<IActionResult> UploadProfilePicture([FromForm] IFormFile file)
         {
-            var userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+            if (!int.TryParse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value, out int userId))
+                return Unauthorized();
             var user = await _userRepository.GetUserByIdAsync(userId);
             if (user == null)
                 return NotFound();

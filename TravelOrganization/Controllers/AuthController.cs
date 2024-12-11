@@ -9,14 +9,16 @@ using System.Security.Claims;
 using TravelOrganization.Data.Models.Account;
 using TravelOrganization.Data.Repositories.Account;
 using TravelOrganization.Data;
+using Microsoft.AspNetCore.Authorization;
+using TravelOrganization.Data.Services;
 
 namespace TravelOrganization.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [AllowAnonymous]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthService _authService;
         private readonly ILogger<AuthController> _logger;
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher<User> _passwordHasher;
@@ -28,14 +30,12 @@ namespace TravelOrganization.Controllers
             IPasswordHasher<User> passwordHasher,
             DataContext context,
             AuthenticationStateProvider authenticationStateProvider,
-            IAuthService authService,
             ILogger<AuthController> logger)
         {
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
             _context = context;
             _authenticationStateProvider = authenticationStateProvider;
-            _authService = authService;
             _logger = logger;
         }
 
@@ -88,11 +88,6 @@ namespace TravelOrganization.Controllers
                     authProperties
                 );
 
-                if (_authenticationStateProvider is CustomAuthenticationStateProvider customAuthProvider)
-                {
-                    customAuthProvider.NotifyUserAuthentication(new ClaimsPrincipal(claimsIdentity));
-                }
-
                 return Ok(new { message = "Login successful" });
             }
             catch (Exception ex)
@@ -105,7 +100,6 @@ namespace TravelOrganization.Controllers
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
-            await _authService.LogoutAsync(HttpContext);
             return Ok(new { message = "Logged out successfully" });
         }
     }

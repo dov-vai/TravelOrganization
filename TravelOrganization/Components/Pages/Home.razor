@@ -83,15 +83,12 @@ else
     {
         try
         {
-            // Call API to handle server-side logout
             var client = HttpClientFactory.CreateClient();
             client.BaseAddress = new Uri("http://localhost:5257/");
             await client.PostAsync("api/Auth/logout", null);
 
-            // Remove "logged in" status from local storage
             await JSRuntime.InvokeVoidAsync("setUserLoggedOut");
 
-            // Navigate to the login page
             Navigation.NavigateTo("/login");
         }
         catch (Exception ex)
@@ -99,6 +96,6 @@ else
             Console.WriteLine($"Logout failed: {ex.Message}");
         }
     }
-        }
+}
 
         
