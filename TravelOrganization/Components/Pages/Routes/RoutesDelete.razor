@@ -1,0 +1,22 @@
+@page "/routes/{id:int}/delete"
+
+@rendermode InteractiveServer
+
+@using TravelOrganization.Controllers;
+
+@inject RouteController RouteController
+
+<div class="text-center justify-content-center align-items-center">
+    <div class="h-1">
+        <h1>Ar tikrai norite ištrinti maršrutą Nr. @Id?</h1>
+        <div class="btn-group">
+            <button @onclick="@(() => RouteController.ConfirmDeleteRoute(Id))" class="btn btn-danger btn-lg me-3">Ištrinti</button>
+            <button @onclick="RouteController.CancelDeleteRoute" class="btn btn-primary btn-lg">Atšaukti</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+}

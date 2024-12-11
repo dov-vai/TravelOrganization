@@ -4,6 +4,7 @@ using TravelOrganization.Components;
 using TravelOrganization.Controllers;
 using TravelOrganization.Data;
 using TravelOrganization.Data.Repositories.Reviews;
+using TravelOrganization.Data.Repositories.Routes;
 using TravelOrganization.Data.Services;
 using TravelOrganization.Data.Models.Account;
 using TravelOrganization.Data.Repositories.Account;
@@ -22,7 +23,11 @@ builder.Services.AddApexCharts();
 builder.Services.AddSingleton<DataContext>();
 
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+builder.Services.AddScoped<StopRepository>();
+builder.Services.AddScoped<RouteRepository>();
+builder.Services.AddScoped<RouteStopRepository>();
 builder.Services.AddScoped<ReviewService>();
+builder.Services.AddScoped<RouteService>();
 builder.Services.AddScoped<ITranslationRepository, TranslationRepository>();
 
 var deeplApiKey = builder.Configuration["Keys:Deepl"];
@@ -34,6 +39,8 @@ if (string.IsNullOrEmpty(deeplApiKey))
 builder.Services.AddSingleton<ITranslator>(_ => new Translator(deeplApiKey));
 builder.Services.AddScoped<TranslationService>();
 builder.Services.AddScoped<ReviewController>();
+builder.Services.AddScoped<RouteController>();
+
 builder.Services.AddScoped<PaymentController>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();

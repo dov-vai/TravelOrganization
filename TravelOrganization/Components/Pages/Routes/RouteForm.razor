@@ -1,0 +1,329 @@
+@using TravelOrganization.Controllers;
+@using TravelOrganization.Data.Models.Routes;
+
+@rendermode InteractiveServer
+
+@inject RouteController RouteController
+
+<style>
+.station-list {
+    border: 1px solid grey;
+    height: 200px;
+    width: 100%;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+</style>
+
+<form>
+    <div class="row">
+        <div class="col-md-6">
+            <EditForm id="route-form" Model="_routeForm" OnValidSubmit="OnSubmitRoute" FormName="RouteDataForm">
+                <AntiforgeryToken/>
+                <DataAnnotationsValidator/>
+                <label for="name" class="form-label">Pavadinimas</label>
+                <InputText type="text" class="form-control" id="name" @bind-Value="_routeForm.Name"></InputText>
+                <ValidationMessage For="() => _routeForm.Name"></ValidationMessage>
+                <label for="rate" class="form-label">Tarifas (€/km)</label>
+                <InputNumber type="number" step="0.01" class="form-control" id="rate" name="rate" @bind-Value="_routeForm.Rate" required></InputNumber>
+                <ValidationMessage For="() => _routeForm.Rate"></ValidationMessage>
+            </EditForm>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <h3>Maršruto stotelės</h3>
+            <nav>
+                <ul class="list-group station-list" @ondragenter="@(() => DragEnter(DragTarget.SelectedStops))" ondragover="event.preventDefault();" @ondragend="@(() => DragEnd())" id="stations">
+                    @foreach (var stop in _routeStops) {
+                        <li tabindex="1" @key="@stop.Id" @ondragstart="@(() => StartDrag(stop))" @ondrop="@(() => Drop(stop))" draggable="true" @onclick="@(e => SelectStop(stop.Id))" class="list-group-item @(StopActiveClass(stop.Id))">@stop.Name</li>
+                    }
+                </ul>
+            </nav>
+        </div>
+        <div class="col-md-3">
+            <h3>Stotelės</h3>
+            <nav>
+                <ul class="list-group station-list" @ondragenter="@(() => DragEnter(DragTarget.AvailableStops))" @ondragend="DragEnd" ondragover="event.preventDefault();" id="avail-stations">
+                @foreach (var stop in _availableStops) {
+                    <li tabindex="1" @key="@stop.Id" @ondragstart="@(() => StartDrag(stop))" @ondrop="@(() => Drop(stop))" draggable="true" @onclick="@(e => SelectStop(stop.Id))" class="list-group-item @(StopActiveClass(stop.Id))">@stop.Name</li>
+                }
+                </ul>
+            </nav>
+        </div>
+
+        <div class="col-md-6 @NewStationShowClass" id="new-station">
+            <h3 id="station-form-title">@_stopFormTitle</h3>
+            <EditForm Model="_stopForm" OnValidSubmit="OnSubmitNewStop" FormName="StopForm">
+                <AntiforgeryToken/>
+                <DataAnnotationsValidator/>
+                <label for="name" class="form-label">Pavadinimas</label>
+                <InputText type="text" class="form-control" id="station-name" name="name" @bind-Value="_stopForm.Name" required></InputText>
+                <ValidationMessage For="() => _stopForm.Name"></ValidationMessage>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="name" class="form-label">Platuma</label>
+                        <InputNumber type="number" step="0.0000000000000001" class="form-control" id="station-latitude" name="latitude" @bind-Value="_stopForm.Latitude" required></InputNumber>
+                        <ValidationMessage For="() => _stopForm.Latitude"></ValidationMessage>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="name" class="form-label">Ilguma</label>
+                        <InputNumber type="number" step="0.0000000000000001" class="form-control" id="station-longitude" name="longitude" @bind-Value="_stopForm.Longitude" required></InputNumber>
+                        <ValidationMessage For="() => _stopForm.Longitude"></ValidationMessage>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-primary">@_stopButtonText</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+
+    <div class="mt-2">
+        <div class="row">
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary" form="route-form">@_submitButtonText</button>
+            </div>
+
+            <div class="col-md-3">
+                <a class="btn btn-primary" @onclick="AddStation" role="button" id="add-station">Pridėti</a>
+                <a class="btn btn-success @_stopEditButtonClass" @onclick="EditStation" role="button" id="edit-station">Redaguoti</a>
+                <a class="btn btn-danger @_stopEditButtonClass" @onclick="OnDeleteStop" role="button" id="delete-station">Ištrinti</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+@code {
+    [Parameter]
+    public string Type { get; set; } = null!;
+    [Parameter]
+    public string Id { get; set; }
+
+    public Route _route = new Route {
+        Name = "",
+        Rate = 0
+    };
+
+    public bool _editMode {
+        get {
+            return Type == "Edit";
+        }
+    }
+
+    private RouteDataForm _routeForm = new RouteDataForm
+    {
+        Id = -1,
+        Name = "",
+        Rate = 0
+    };
+
+    private StopForm _stopForm = new StopForm
+    {
+        Id = -1,
+        Name = "",
+        Latitude = 0,
+        Longitude = 0
+    };
+
+    public enum DragTarget {
+        AvailableStops,
+        SelectedStops
+    }
+
+    public DragTarget _dragTarget;
+    private Stop? _dragged;
+    private int _targetIndex = -1;
+    private IEnumerable<Stop> _stops;
+    private List<Stop> _availableStops;
+    private List<Stop> _routeStops;
+
+    public string _stopEditButtonClass
+    {
+        get
+        {
+            return _stopForm.Id == -1 ? "disabled" : "";
+        }
+    }
+
+    public string _submitButtonText
+    {
+        get
+        {
+            return _editMode ? "Išsaugoti" : "Sukurti";
+        }
+    }
+
+    public string NewStationShowClass
+    {
+        get
+        {
+            return _showNewStopForm ? "" : "d-none";
+        }
+    }
+
+    public string StopActiveClass(int id) {
+        return _stopForm.Id == id ? "active" : "";
+    }
+
+    public string _stopFormTitle { get; set; } = null!;
+    public string _stopButtonText { get; set; } = null!;
+
+    private bool _modeAddStop = true;
+    private bool _showNewStopForm = false;
+
+    private async Task FetchStops() {
+        _stops = await RouteController.GetStops();
+        _availableStops = _stops.ToList();
+        _routeStops = new List<Stop>();
+
+        if (_editMode) {
+            foreach (var routeStop in await RouteController.GetRouteStops(_route)) {
+                var stop = _availableStops.First(x => x.Id == routeStop.StopId);
+
+                _availableStops.Remove(stop);
+                _routeStops.Add(stop);
+            }
+
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (_editMode) {
+            _routeForm.Id = int.Parse(Id);
+            _route = await RouteController.GetRoute(_routeForm.Id);
+
+            _routeForm.Name = _route.Name;
+            _routeForm.Rate = _route.Rate;
+        }
+
+        FetchStops();
+    }
+
+
+    private void AddStation()
+    {
+        _modeAddStop = true;
+        _showNewStopForm = true;
+
+        _stopFormTitle = "Naujos stotelės pridėjimas";
+        _stopButtonText = "Sukurti";
+
+        _stopForm.Name = "";
+        _stopForm.Latitude = 0.0;
+        _stopForm.Longitude = 0.0;
+    }
+
+    private Stop? GetStop(int id) {
+        foreach (Stop stop in _stops) {
+            if (stop.Id == id) {
+                return stop;
+            }
+        }
+
+        return null;
+    }
+
+    private void EditStation()
+    {
+        _modeAddStop = false;
+        _showNewStopForm = true;
+
+        _stopFormTitle = "Stotelės redagavimas";
+        _stopButtonText = "Išsaugoti";
+
+        Stop stop = _stops.First(x => x.Id == _stopForm.Id);
+
+        if (stop != null) {
+            _stopForm.Name = stop.Name;
+            _stopForm.Latitude = stop.Latitude;
+            _stopForm.Longitude = stop.Longitude;
+        }
+    }
+
+    private async Task OnSubmitRoute()
+    {
+        if (_editMode) {
+            await RouteController.UpdateRoute(_routeForm, _routeStops);
+        }
+        else {
+            await RouteController.AddRoute(_routeForm, _routeStops);
+        }
+
+    }
+
+    private async Task OnSubmitNewStop()
+    {
+        if (_modeAddStop) {
+            await RouteController.AddStop(_stopForm);
+        }
+        else {
+            await RouteController.UpdateStop(_stopForm);
+        }
+
+        FetchStops();
+    }
+
+    private async Task OnDeleteStop()
+    {
+        await RouteController.DeleteStop(_stopForm.Id);
+
+        FetchStops();
+    }
+
+    public int Index(List<Stop> stops, Stop stop) {
+        return stops.FindIndex(x => x.Id == stop.Id);
+    }
+
+    public void StartDrag(Stop stop) {
+        _dragged = stop;
+    }
+
+    public void DragEnter(DragTarget target) {
+        _dragTarget = target;
+    }
+
+    public void DragEnd() {
+        if (_dragged != null) {
+            int idx = Index(_routeStops, _dragged);
+
+            if (_dragTarget == DragTarget.SelectedStops) {
+                if (idx != -1) {
+                    _routeStops.RemoveAt(idx);
+                }
+                else {
+                    _availableStops.Remove(_dragged);
+                }
+
+                if (_targetIndex != -1) {
+                    _routeStops.Insert(_targetIndex, _dragged);
+                    _targetIndex = -1;
+                }
+                else {
+                    _routeStops.Add(_dragged);
+                }
+            }
+            else if (idx != -1) {
+                _routeStops.Remove(_dragged);
+                _availableStops.Add(_dragged);
+            }
+
+            _dragged = null;
+
+        }
+    }
+
+    public void Drop(Stop stop) {
+        if (_dragTarget == DragTarget.SelectedStops) {
+            _targetIndex = Index(_routeStops, stop);
+        }
+    }
+
+    public void SelectStop(int stopId) {
+        _stopForm.Id = stopId;
+    }
+}

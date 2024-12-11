@@ -1,0 +1,38 @@
+@page "/routes"
+
+@rendermode InteractiveServer
+
+@using TravelOrganization.Controllers;
+@using TravelOrganization.Data.Models.Routes;
+
+@inject RouteController RouteController
+
+<h1>Maršrutai</h1>
+
+<button @onclick="RouteController.AddRoute" class="btn btn-success">Pridėti maršrutą</button>
+
+<ul class="list-group route-list">
+@foreach (var route in RouteList)
+{
+  <li class="list-group-item">
+    <div class="route-left">
+      <b>Nr. @route.Id</b>
+      <span>@route.Name</span>
+    </div>
+    <div class="route-right">
+      <button @onclick="@(() => RouteController.EditRoute(route.Id))" class="btn btn-primary">Redaguoti</button>
+      <button @onclick="@(() => RouteController.DeleteRoute(route.Id))" class="btn btn-danger">Ištrinti</button>
+    </div>
+  </li>
+}
+</ul>
+
+@code {
+    public IEnumerable<Route> RouteList = new List<Route>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        RouteList = await RouteController.GetRoutes();
+    }
+
+}

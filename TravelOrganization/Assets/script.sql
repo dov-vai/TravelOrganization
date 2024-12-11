@@ -66,10 +66,9 @@ VALUES (3, 'Administratorius');
 
 CREATE TABLE marsrutai
 (
-    nr          int              NOT NULL,
-    pavadinimas varchar(255)     NOT NULL,
-    tarifas     double precision NOT NULL,
-    PRIMARY KEY (nr)
+    nr          INTEGER PRIMARY KEY NOT NULL,
+    pavadinimas varchar(255)        NOT NULL,
+    tarifas     double precision    NOT NULL
 );
 
 CREATE TABLE uzsakymo_busenos
@@ -91,12 +90,11 @@ VALUES (5, 'Atsauktas');
 
 CREATE TABLE stoteles
 (
-    pavadinimas varchar(255)     NOT NULL,
-    vieta_pl    double precision NOT NULL,
-    ivertinimas double           NOT NULL,
-    vieta_dn    double precision NOT NULL,
-    id          int              NOT NULL,
-    PRIMARY KEY (id)
+    pavadinimas varchar(255)        NOT NULL,
+    vieta_pl    double precision    NOT NULL,
+    ivertinimas double              NOT NULL,
+    vieta_dn    double precision    NOT NULL,
+    id          INTEGER PRIMARY KEY NOT NULL
 );
 
 CREATE TABLE marsruto_stoteles
